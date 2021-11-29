@@ -70,9 +70,36 @@ def display_views_by_browser(doc_uuid):
     plt.hist(browsers)
     plt.show()
 
+def display_viewtime_by_userid(doc_uuid):
+    
+    visitor_ids = list(set([visitor['visitor_uuid'] for visitor in data]))
+    viewtime = dict([(visitor, 0) for visitor in visitor_ids])
+    for id in viewtime:
+        for viewer in data:
+            try:
+                if (id == viewer['visitor_uuid']):
+                    temp_readtime = viewer['event_readtime']
+                    temp_readtime += viewer['event_readtime']
+                    viewtime[id] = temp_readtime
+            except Exception:
+                pass
+    
+    time_sorted = list(sorted(viewtime.items(), key=lambda kv: kv[1], reverse=True))[:10]
+    users = []
+    times = []
+
+    for viewer in time_sorted:
+        users.append(viewer[0])
+        times.append(viewer[1])
+
+    plt.grid(axis='y', alpha=0.75)
+    plt.xlabel('viewer ID')
+    plt.ylabel('time spent')
+    plt.bar(users, times)
+    plt.show()
 
 
 # testing the functions here
 #display_views_by_country(doc_uuid)
 #display_views_by_continent()
-display_views_by_browser("130927071110-0847713a13bea63d7f359ea012f3538d")
+display_viewtime_by_userid("130927071110-0847713a13bea63d7f359ea012f3538d")
