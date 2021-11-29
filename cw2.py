@@ -101,6 +101,20 @@ def display_viewtime_by_userid(doc_uuid):
     plt.gca().set_yticklabels(['{:.0f}'.format(x) for x in current_values])
     plt.show()
 
+
+    
+def return_visitors(doc_uuid):
+    viewerIDList = []
+    for viewer in data:
+        try:
+            if (viewer['env_doc_id'] == doc_uuid):
+                viewerID = viewer['visitor_uuid']
+                if (viewerID not in viewerIDList) :
+                    viewerIDList.append(viewerID)
+        except Exception:
+            pass # do something here for the exception
+    print (viewerIDList)
+
 def display_docs_by_userid(visitor_uuid):
     docs_list = []
     temp_doc = ""
@@ -118,4 +132,8 @@ def display_docs_by_userid(visitor_uuid):
 # testing the functions here
 #display_views_by_country(doc_uuid)
 #display_views_by_continent()
+
+#display_viewtime_by_userid("130927071110-0847713a13bea63d7f359ea012f3538d")
+
+return_visitors("130927071110-0847713a13bea63d7f359ea012f3538d")
 display_docs_by_userid("720e227312e3e905")
