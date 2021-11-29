@@ -103,7 +103,7 @@ def display_viewtime_by_userid(doc_uuid):
 
 
     
-def return_visitors(doc_uuid):
+def return_visitors_by_docid(doc_uuid):
     viewerIDList = []
     for viewer in data:
         try:
@@ -115,7 +115,7 @@ def return_visitors(doc_uuid):
             pass # do something here for the exception
     print (viewerIDList)
 
-def display_docs_by_userid(visitor_uuid):
+def return_docs_by_userid(visitor_uuid):
     docs_list = []
     temp_doc = ""
     for docs in data:
@@ -135,5 +135,5 @@ def display_docs_by_userid(visitor_uuid):
 
 #display_viewtime_by_userid("130927071110-0847713a13bea63d7f359ea012f3538d")
 
-return_visitors("130927071110-0847713a13bea63d7f359ea012f3538d")
-display_docs_by_userid("720e227312e3e905")
+return_visitors_by_docid("130927071110-0847713a13bea63d7f359ea012f3538d")
+return_docs_by_userid("720e227312e3e905")
