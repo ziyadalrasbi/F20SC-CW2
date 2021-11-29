@@ -7,25 +7,23 @@ import pandas as pd
 data = []
 
 # empty list for getting countries for task 2
-countries = [];
-#open the json file and call it file
-file = open("test.json", 'r')
-Lines = file.readlines()
+countries = []
+#open the json file and call it dataset
+dataset = open("testlarge.json", 'r')
+Lines = dataset.readlines()
 
 #for every line in the json file
 for line in Lines:
     #y = a dictionary of every json object
-    y = json.loads(line)
+    dataDict = json.loads(line)
     #add the json objects to the list "data"
-    data.append(y)
+    data.append(dataDict)
     
-file.close()
+dataset.close()
+
+doc_uuid = input("Please enter the doc ID")
 
 
-##test
-#for every object "visitor country in data, print it
-for x in data:
-    print(x["visitor_country"])
 
 def display_views_by_country(doc_uuid): 
     for viewer in data:
@@ -59,5 +57,5 @@ def display_views_by_continent():
 
 
 # testing the functions here
-display_views_by_country('140228202800-6ef39a241f35301a9a42cd0ed21e5fb0')
+display_views_by_country(doc_uuid)
 display_views_by_continent()
