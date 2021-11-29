@@ -71,16 +71,17 @@ def display_views_by_browser(doc_uuid):
     plt.show()
 
 def display_viewtime_by_userid(doc_uuid):
-    
+    total_readtime = 0
     visitor_ids = list(set([visitor['visitor_uuid'] for visitor in data]))
     viewtime = dict([(visitor, 0) for visitor in visitor_ids])
     for id in viewtime:
+        total_readtime = 0
         for viewer in data:
             try:
                 if (id == viewer['visitor_uuid']):
                     temp_readtime = viewer['event_readtime']
-                    temp_readtime += viewer['event_readtime']
-                    viewtime[id] = temp_readtime
+                    total_readtime += temp_readtime
+                    viewtime[id] = total_readtime
             except Exception:
                 pass
     
@@ -96,6 +97,8 @@ def display_viewtime_by_userid(doc_uuid):
     plt.xlabel('viewer ID')
     plt.ylabel('time spent')
     plt.bar(users, times)
+    current_values = plt.gca().get_yticks()
+    plt.gca().set_yticklabels(['{:.0f}'.format(x) for x in current_values])
     plt.show()
 
 
