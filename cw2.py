@@ -8,6 +8,8 @@ data = []
 
 # empty list for getting countries for task 2
 countries = []
+
+browsers = []
 #open the json file and call it dataset
 dataset = open("testlarge.json", 'r')
 Lines = dataset.readlines()
@@ -21,11 +23,11 @@ for line in Lines:
     
 dataset.close()
 
-doc_uuid = input("Please enter the doc ID")
+#doc_uuid = input("Please enter the doc ID")
 
 
 
-def display_views_by_country(doc_uuid): 
+def display_views_by_country(): 
     for viewer in data:
         try:
             if (viewer['env_doc_id'] == doc_uuid):
@@ -53,9 +55,24 @@ def display_views_by_continent():
     plt.hist(continents)
     plt.show()
 
+def display_views_by_browser(doc_uuid): 
+    for viewer in data:
+        try:
+            if (viewer['env_doc_id'] == doc_uuid):
+                viewer_browser = viewer['visitor_useragent'].split('/')[0]
+                
+                browsers.append(viewer_browser)
+        except Exception:
+            pass # do something here for the exception
+    
+    plt.xlabel('browser')
+    plt.ylabel('amount')
+    plt.hist(browsers)
+    plt.show()
 
 
 
 # testing the functions here
-display_views_by_country(doc_uuid)
-display_views_by_continent()
+#display_views_by_country(doc_uuid)
+#display_views_by_continent()
+display_views_by_browser("130927071110-0847713a13bea63d7f359ea012f3538d")
