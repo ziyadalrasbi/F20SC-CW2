@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pycountry_convert as pc
 import pandas as pd
 from collections import Counter
+import graphviz
 
 #create a empty list called data
 data = []
@@ -145,11 +146,40 @@ def also_likes(doc_uuid, visitor_uuid=None):
 def also_likes_top_10 (doc_uuid, visitor_uuid=None):
     top10docs = also_likes(doc_uuid)
     counter = Counter(top10docs)
-    top10docsarranged = counter.most_common(10)
+    top10docsarranged = counter.most_common(11)
     print("also likes (document ID : Number of reads):")
     for doc in top10docsarranged:
         print(str(doc[0]) + " : " + str(doc[1]))
-        
+    return top10docsarranged
+
+def alsolikesgraph (doc_uuid, visitor_uuid=None):
+    visitors = return_visitors_by_docid(doc_uuid)
+    docs = also_likes(doc_uuid)
+    gD = graphviz.Digraph('document', node_attr={'shape' : 'circle'})
+    gD.graph_attr.update(rank='min')
+    gV = graphviz.Digraph('visitor', node_attr={'shape' : 'rectangle'})
+    gV.graph_attr.update(rank='max')
+    for doc in docs:
+        if (doc == doc_uuid):
+            gD.node(doc, str((doc)[-4:]), fillcolor='green', style='filled', shape='circle')
+        else:
+            gD.node(doc, str((doc)), fillcolor='white', shape='circle')
+    for visitor in visitors:
+        gV.node(visitor, str(visitor[-4:]), fillcolor='white', style='filled', shape='rectangle')
+        for  doc in return_docs_by_userid(visitor):
+            try:
+                gV.edge(visitor, doc)
+        #gV.edge(visitor, doc_uuid)
+            except Exception:
+                pass # do something here for the exception    
+
+    
+    
+    gV.subgraph(gD)
+    
+    gV.format = 'png'
+    gV.render(directory='doctest-output', view=True)
+
             
             
     
@@ -162,4 +192,4 @@ def also_likes_top_10 (doc_uuid, visitor_uuid=None):
 #display_viewtime_by_userid("130927071110-0847713a13bea63d7f359ea012f3538d")
 
 
-also_likes_top_10("140310170010-0000000067dc80801f1df696ae52862b")
+alsolikesgraph("140310170010-0000000067dc80801f1df696ae52862b")
