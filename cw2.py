@@ -15,7 +15,7 @@ browsers = []
 
 
 #open the json file and call it dataset
-dataset = open("testxxl.json", 'r', encoding='utf-8')
+dataset = open("test400.json", 'r', encoding='utf-8')
 Lines = dataset.readlines()
 
 #for every line in the json file
@@ -133,7 +133,6 @@ def return_docs_by_userid(visitor_uuid):
             pass
     if(len(docs_list) < 2):
         return
-    print(list(docs_list))
     return list(docs_list)
 
 def also_likes(doc_uuid, visitor_uuid=None):
@@ -149,8 +148,6 @@ def also_likes(doc_uuid, visitor_uuid=None):
         also_likes_docs.extend(return_docs_by_userid(visitor_uuid))
 
     also_likes_docs.sort()
-    print(also_likes_docs)
-    print(also_likes_visitor)
     return also_likes_docs
 
 def also_likes_top_10 (doc_uuid, visitor_uuid=None):
@@ -205,4 +202,4 @@ def alsolikesgraph (doc_uuid, visitor_uuid=None):
 
 
 #return_docs_by_userid("50ac35b7a0474b3e")
-alsolikesgraph("140213232558-bdd53a3a2ae91f2c5f951187668edd50")
+alsolikesgraph("140310170010-0000000067dc80801f1df696ae52862b")
