@@ -15,7 +15,7 @@ browsers = []
 
 
 #open the json file and call it dataset
-dataset = open("test400.json", 'r', encoding='utf-8')
+dataset = open("testxxl.json", 'r', encoding='utf-8')
 Lines = dataset.readlines()
 
 #for every line in the json file
@@ -62,7 +62,7 @@ def display_views_by_continent():
 def display_views_by_browser(doc_uuid): 
     for viewer in data:
         try:
-            if (viewer['env_doc_id'] == doc_uuid):
+            if (viewer['subject_doc_id'] == doc_uuid):
                 viewer_browser = viewer['visitor_useragent'].split('/')[0]
                 
                 browsers.append(viewer_browser)
@@ -109,23 +109,29 @@ def return_visitors_by_docid(doc_uuid):
     viewerIDList = set()
     for viewer in data:
         try:
-            if (viewer['env_doc_id'] == doc_uuid):
+            if (viewer['event_type'] != 'read'):
+                continue
+            if (viewer['subject_doc_id'] == doc_uuid):
                 viewerID = viewer['visitor_uuid']
                 viewerIDList.add(viewerID)
         except Exception:
             pass # do something here for the exception
+    if(len(viewerIDList) < 2):
+        return
     return list(viewerIDList)
 
 def return_docs_by_userid(visitor_uuid):
     docs_list = set()
     for docs in data:
         try:
+            if (docs['event_type'] != 'read'):
+                continue
             if (docs['visitor_uuid'] == visitor_uuid):
                 temp_doc = docs['subject_doc_id']
                 docs_list.add(temp_doc)
         except Exception:
             pass
-    if(len(docs_list) == 1):
+    if(len(docs_list) < 2):
         return
     print(list(docs_list))
     return list(docs_list)
@@ -143,8 +149,8 @@ def also_likes(doc_uuid, visitor_uuid=None):
         also_likes_docs.extend(return_docs_by_userid(visitor_uuid))
 
     also_likes_docs.sort()
-    #print(also_likes_docs)
-    #print(also_likes_visitor)
+    print(also_likes_docs)
+    print(also_likes_visitor)
     return also_likes_docs
 
 def also_likes_top_10 (doc_uuid, visitor_uuid=None):
@@ -199,4 +205,4 @@ def alsolikesgraph (doc_uuid, visitor_uuid=None):
 
 
 #return_docs_by_userid("50ac35b7a0474b3e")
-alsolikesgraph("140310170010-0000000067dc80801f1df696ae52862b")
+alsolikesgraph("140213232558-bdd53a3a2ae91f2c5f951187668edd50")
