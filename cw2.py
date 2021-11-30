@@ -10,8 +10,10 @@ data = []
 countries = []
 
 browsers = []
+
+
 #open the json file and call it dataset
-dataset = open("testlarge.json", 'r')
+dataset = open("testxxl.json", 'r', encoding='utf-8')
 Lines = dataset.readlines()
 
 #for every line in the json file
@@ -101,39 +103,50 @@ def display_viewtime_by_userid(doc_uuid):
     plt.gca().set_yticklabels(['{:.0f}'.format(x) for x in current_values])
     plt.show()
 
-
-    
-def return_visitors(doc_uuid):
-    viewerIDList = []
+def return_visitors_by_docid(doc_uuid):
+    viewerIDList = set()
     for viewer in data:
         try:
             if (viewer['env_doc_id'] == doc_uuid):
                 viewerID = viewer['visitor_uuid']
-                if (viewerID not in viewerIDList) :
-                    viewerIDList.append(viewerID)
+                viewerIDList.add(viewerID)
         except Exception:
             pass # do something here for the exception
-    print (viewerIDList)
+    return list(viewerIDList)
 
-def display_docs_by_userid(visitor_uuid):
-    docs_list = []
-    temp_doc = ""
+def return_docs_by_userid(visitor_uuid):
+    docs_list = set()
     for docs in data:
         try:
             if (docs['visitor_uuid'] == visitor_uuid):
                 temp_doc = docs['subject_doc_id']
-                if (temp_doc not in docs_list):
-                    docs_list.append(temp_doc)
+                docs_list.add(temp_doc)
         except Exception:
             pass
-    
-    print(docs_list)
+    return list(docs_list)
 
+def also_likes(doc_uuid, visitor_uuid=None):
+    
+    also_likes_docs = []
+    also_likes_visitor = []
+    if visitor_uuid is None:
+        also_likes_visitor = return_visitors_by_docid(doc_uuid)
+        for visitor in also_likes_visitor:
+            also_likes_docs.extend(return_docs_by_userid(visitor))
+    else:
+        also_likes_docs.extend(return_docs_by_userid(visitor_uuid))
+
+    also_likes_docs.sort()
+    print(also_likes_docs)
+    print(also_likes_visitor)
+    return also_likes_docs
+
+    
 # testing the functions here
-#display_views_by_country(doc_uuid)
+#display_views_by_country("doc_uuid")
 #display_views_by_continent()
 
 #display_viewtime_by_userid("130927071110-0847713a13bea63d7f359ea012f3538d")
 
-return_visitors("130927071110-0847713a13bea63d7f359ea012f3538d")
-display_docs_by_userid("720e227312e3e905")
+
+also_likes("140109173556-a4b921ab7619621709b098aa9de4d736")
