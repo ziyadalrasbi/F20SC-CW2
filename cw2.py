@@ -2,6 +2,7 @@ import json
 import matplotlib.pyplot as plt
 import pycountry_convert as pc
 import pandas as pd
+from collections import Counter
 
 #create a empty list called data
 data = []
@@ -13,7 +14,7 @@ browsers = []
 
 
 #open the json file and call it dataset
-dataset = open("testxxl.json", 'r', encoding='utf-8')
+dataset = open("test400.json", 'r', encoding='utf-8')
 Lines = dataset.readlines()
 
 #for every line in the json file
@@ -137,9 +138,21 @@ def also_likes(doc_uuid, visitor_uuid=None):
         also_likes_docs.extend(return_docs_by_userid(visitor_uuid))
 
     also_likes_docs.sort()
-    print(also_likes_docs)
-    print(also_likes_visitor)
+    #print(also_likes_docs)
+    #print(also_likes_visitor)
     return also_likes_docs
+
+def also_likes_top_10 (doc_uuid, visitor_uuid=None):
+    top10docs = also_likes(doc_uuid)
+    counter = Counter(top10docs)
+    top10docsarranged = counter.most_common(10)
+    print("also likes (document ID : Number of reads):")
+    for doc in top10docsarranged:
+        print(str(doc[0]) + " : " + str(doc[1]))
+        
+            
+            
+    
 
     
 # testing the functions here
@@ -149,4 +162,4 @@ def also_likes(doc_uuid, visitor_uuid=None):
 #display_viewtime_by_userid("130927071110-0847713a13bea63d7f359ea012f3538d")
 
 
-also_likes("140109173556-a4b921ab7619621709b098aa9de4d736")
+also_likes_top_10("140310170010-0000000067dc80801f1df696ae52862b")
