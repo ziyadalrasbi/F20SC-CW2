@@ -125,6 +125,9 @@ def return_docs_by_userid(visitor_uuid):
                 docs_list.add(temp_doc)
         except Exception:
             pass
+    if(len(docs_list) == 1):
+        return
+    print(list(docs_list))
     return list(docs_list)
 
 def also_likes(doc_uuid, visitor_uuid=None):
@@ -134,7 +137,8 @@ def also_likes(doc_uuid, visitor_uuid=None):
     if visitor_uuid is None:
         also_likes_visitor = return_visitors_by_docid(doc_uuid)
         for visitor in also_likes_visitor:
-            also_likes_docs.extend(return_docs_by_userid(visitor))
+            if(return_docs_by_userid(visitor) != None):
+                also_likes_docs.extend(return_docs_by_userid(visitor))
     else:
         also_likes_docs.extend(return_docs_by_userid(visitor_uuid))
 
@@ -163,15 +167,17 @@ def alsolikesgraph (doc_uuid, visitor_uuid=None):
         if (doc == doc_uuid):
             gD.node(doc, str((doc)[-4:]), fillcolor='green', style='filled', shape='circle')
         else:
-            gD.node(doc, str((doc)), fillcolor='white', shape='circle')
+            gD.node(doc, str((doc[-4:])), fillcolor='white', shape='circle')
     for visitor in visitors:
-        gV.node(visitor, str(visitor[-4:]), fillcolor='white', style='filled', shape='rectangle')
-        for  doc in return_docs_by_userid(visitor):
-            try:
-                gV.edge(visitor, doc)
+        
+        if(return_docs_by_userid(visitor) != None):
+            gV.node(visitor, str(visitor[-4:]), fillcolor='white', style='filled', shape='rectangle')
+            for  doc in return_docs_by_userid(visitor):
+                try:
+                    gV.edge(visitor, doc)
         #gV.edge(visitor, doc_uuid)
-            except Exception:
-                pass # do something here for the exception    
+                except Exception:
+                    pass # do something here for the exception    
 
     
     
@@ -192,4 +198,5 @@ def alsolikesgraph (doc_uuid, visitor_uuid=None):
 #display_viewtime_by_userid("130927071110-0847713a13bea63d7f359ea012f3538d")
 
 
+#return_docs_by_userid("50ac35b7a0474b3e")
 alsolikesgraph("140310170010-0000000067dc80801f1df696ae52862b")
