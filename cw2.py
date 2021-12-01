@@ -59,20 +59,52 @@ def display_views_by_continent():
     plt.hist(continents)
     plt.show()
 
-def display_views_by_browser(doc_uuid): 
+def display_views_by_browser():
+    #create a list of visitors and make it empty
+    vislist = []
+    #for every viewer in the dataset
     for viewer in data:
         try:
-            if (viewer['subject_doc_id'] == doc_uuid):
-                viewer_browser = viewer['visitor_useragent'].split('/')[0]
-                
-                browsers.append(viewer_browser)
+            #ensure the document is read
+            if (viewer['event_type'] != 'read'):
+                continue
+            #assign the visitor variable the value of the current viewer's unique ID
+            visitor = viewer['visitor_uuid']
+            #if the current visitor is not in the list of visitors (if the visitor is not a duplicate entry)
+            if visitor not in vislist:
+                #add the current visitor to the list of visitor
+                vislist.append(visitor)
+                #via unique strings that are only found in each browser's specific "visitor_useragent" codes (found at: https://developers.whatismybrowser.com/useragents/explore/software_type_specific/web-browser/1)
+                #add each browser to the browsers list
+                if ") Chrome" in viewer['visitor_useragent']:
+                    browsers.append("Chrome")
+                elif "CriOS" in viewer['visitor_useragent']:
+                    browsers.append("Chrome")
+                elif "GSA" in viewer['visitor_useragent']:
+                    browsers.append("Chrome")
+                elif ") Version" in viewer['visitor_useragent']:
+                    browsers.append("Safari")
+                elif ") Mobile" in viewer['visitor_useragent']:
+                    browsers.append("AppleWebKit")
+                elif "MSIE" in viewer['visitor_useragent']:
+                    browsers.append("Internet Explorer")
+                elif "fox" in viewer['visitor_useragent']:
+                    browsers.append("Firefox")
+                else:
+                    browsers.append("Other")
         except Exception:
             pass # do something here for the exception
-    
+    #using the "Counter" function, count each time a browser has been added to the list and assign that browser an integer value
+    counter = Counter(browsers)
+    #plot the x and y axis
     plt.xlabel('browser')
     plt.ylabel('amount')
-    plt.hist(browsers)
+    #plot the bar chart using the browser name and the amount of times it appears in the list
+    plt.bar(counter.keys(), counter.values())
+    #show the bar chart
     plt.show()
+    
+    
 
 def display_viewtime_by_userid(doc_uuid):
     total_readtime = 0
@@ -197,9 +229,10 @@ def alsolikesgraph (doc_uuid, visitor_uuid=None):
 # testing the functions here
 #display_views_by_country("doc_uuid")
 #display_views_by_continent()
+display_views_by_browser()
 
 #display_viewtime_by_userid("130927071110-0847713a13bea63d7f359ea012f3538d")
 
 
 #return_docs_by_userid("50ac35b7a0474b3e")
-alsolikesgraph("140310170010-0000000067dc80801f1df696ae52862b")
+#alsolikesgraph("140310170010-0000000067dc80801f1df696ae52862b")
