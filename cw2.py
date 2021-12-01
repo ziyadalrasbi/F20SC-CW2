@@ -4,6 +4,9 @@ import pycountry_convert as pc
 import pandas as pd
 from collections import Counter
 import graphviz
+import re
+from user_agents import parse
+import httpagentparser
 
 #create a empty list called data
 data = []
@@ -11,11 +14,11 @@ data = []
 # empty list for getting countries for task 2
 countries = []
 
-browsers = []
+
 
 
 #open the json file and call it dataset
-dataset = open("test400.json", 'r', encoding='utf-8')
+dataset = open("testl.json", 'r', encoding='utf-8')
 Lines = dataset.readlines()
 
 #for every line in the json file
@@ -31,9 +34,11 @@ dataset.close()
 
 
 
-def display_views_by_country(): 
+def display_views_by_country(doc_uuid): 
     for viewer in data:
         try:
+            if (viewer['event_type'] != 'read'):
+                continue
             if (viewer['env_doc_id'] == doc_uuid):
                 viewer_country = viewer['visitor_country']
                 countries.append(viewer_country)
@@ -59,19 +64,48 @@ def display_views_by_continent():
     plt.hist(continents)
     plt.show()
 
-def display_views_by_browser(doc_uuid): 
+# Mozilla/5.0 (Windows NT 6.1; WOW64) Gecko/20100101 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36
+# converts to Mozilla Gecko AppleWebKit Chrome Safari
+def display_views_by_browser(): 
+    browsers = []
+    already_viewed = []
     for viewer in data:
         try:
-            if (viewer['subject_doc_id'] == doc_uuid):
-                viewer_browser = viewer['visitor_useragent'].split('/')[0]
+            if (viewer['event_type'] != 'read'):
+                continue
+            # removing duplicate entries
+            if (viewer['visitor_uuid'] not in already_viewed): 
+                already_viewed.append(viewer['visitor_uuid'])
+                viewer_browser = viewer['visitor_useragent']
+                # httpagentparser is a parser used to extract info from a user agent
+                # here it is used to detect the browser from the JSON input and extract the browser names
+                test = httpagentparser.simple_detect(viewer_browser)
+                # regex to remove empty spaces, numbers, and dot symbols
+                formatted_string = re.sub(r'\d.*', '', test[1])
+                formatted_string = formatted_string.replace(' ', '')
+                # some more checking to ensure browser names are calculated correctly
+                if "Chrome" in formatted_string:
+                    browsers.append("Chrome")
+                elif "Firefox" in formatted_string or "Mozilla" in formatted_string:
+                    browsers.append("Firefox")
+                elif "Safari" in formatted_string:
+                    browsers.append("Safari")
+                elif "MicrosoftInternetExplorer" in formatted_string:
+                    browsers.append("MSIE")
+                elif "UnknownBrowser" in formatted_string and "iOS" in test[0]:
+                    browsers.append("AppleWebKit")
+                else:
+                     browsers.append("Other")
                 
-                browsers.append(viewer_browser)
         except Exception:
             pass # do something here for the exception
-    
-    plt.xlabel('browser')
-    plt.ylabel('amount')
-    plt.hist(browsers)
+    # displaying the info
+    counter = Counter(browsers)
+    print(counter)
+    plt.grid(axis='y', alpha=0.75)
+    plt.xlabel('Browser')
+    plt.ylabel('Amount')
+    plt.bar(counter.keys(), counter.values())
     plt.show()
 
 def display_viewtime_by_userid(doc_uuid):
@@ -182,10 +216,7 @@ def alsolikesgraph (doc_uuid, visitor_uuid=None):
                 except Exception:
                     pass # do something here for the exception    
 
-    
-    
     gV.subgraph(gD)
-    
     gV.format = 'png'
     gV.render(directory='doctest-output', view=True)
 
@@ -202,4 +233,5 @@ def alsolikesgraph (doc_uuid, visitor_uuid=None):
 
 
 #return_docs_by_userid("50ac35b7a0474b3e")
-alsolikesgraph("140310170010-0000000067dc80801f1df696ae52862b")
+#display_views_by_browser()
+display_views_by_browser()
