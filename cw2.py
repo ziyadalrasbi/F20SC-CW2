@@ -184,7 +184,7 @@ def also_likes(doc_uuid, visitor_uuid=None):
     also_likes_docs.sort()
     return also_likes_docs
 
-def also_likes_top_10 (doc_uuid, visitor_uuid=None):
+def also_likes_top_10 (doc_uuid):
     top10docs = also_likes(doc_uuid)
     counter = Counter(top10docs)
     top10docsarranged = counter.most_common(11)
