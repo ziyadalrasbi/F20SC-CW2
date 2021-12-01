@@ -61,6 +61,45 @@ def display_views_by_continent():
     plt.hist(continents)
     plt.show()
 
+def display_views_by_browser_part_a(): 
+    browsers = []
+    already_viewed = []
+    for viewer in data:
+        try:
+            if (viewer['event_type'] != 'read'):
+                continue
+            # removing duplicate entries
+            if (viewer['visitor_uuid'] not in already_viewed): 
+                already_viewed.append(viewer['visitor_uuid'])
+                viewer_browser = viewer['visitor_useragent']
+                # httpagentparser is a parser used to extract info from a user agent
+                # here it is used to detect the browser from the JSON input and extract the browser names
+                test = httpagentparser.simple_detect(viewer_browser)
+                # some more checking to ensure browser names are calculated correctly
+                if "Chrome" in test[1]:
+                    browsers.append(test[1])
+                elif "Firefox" in test[1] or "Mozilla" in test[1]:
+                    browsers.append(test[1])
+                elif "Safari" in test[1]:
+                    browsers.append(test[1])
+                elif "MicrosoftInternetExplorer" in test[1]:
+                    browsers.append(test[1])
+                elif "UnknownBrowser" in test[1] and "iOS" in test[0]:
+                    browsers.append(test[1])
+                else:
+                     browsers.append("Other")
+                
+        except Exception:
+            pass # do something here for the exception
+    # displaying the info
+    counter = Counter(browsers)
+    
+    plt.grid(axis='y', alpha=0.75)
+    plt.xlabel('Browser')
+    plt.ylabel('Amount')
+    plt.bar(counter.keys(), counter.values())
+    plt.show()
+
 def display_views_by_browser_short_a():
     #create a list of visitors and make it empty
     vislist = []
@@ -142,7 +181,7 @@ def display_views_by_browser_short_b():
             pass # do something here for the exception
     # displaying the info
     counter = Counter(browsers)
-    print(counter)
+    
     plt.grid(axis='y', alpha=0.75)
     plt.xlabel('Browser')
     plt.ylabel('Amount')
@@ -272,7 +311,7 @@ def alsolikesgraph (doc_uuid, visitor_uuid=None):
 # testing the functions here
 #display_views_by_country("doc_uuid")
 #display_views_by_continent()
-display_views_by_browser_a()
+display_views_by_browser_part_a()
 
 #display_viewtime_by_userid("130927071110-0847713a13bea63d7f359ea012f3538d")
 
