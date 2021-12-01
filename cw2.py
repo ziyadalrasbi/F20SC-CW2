@@ -33,26 +33,44 @@ dataset.close()
 
 
 
-def display_views_by_country(): 
+def display_views_by_country(doc_uuid, isPressed): 
     for viewer in data:
         try:
+            if (viewer['event_type'] != 'read'):
+                continue
             if (viewer['env_doc_id'] == doc_uuid):
                 viewer_country = viewer['visitor_country']
                 countries.append(viewer_country)
         except Exception:
             pass # do something here for the exception
+    if (isPressed == True):
+        plt.xlabel('country')
+        plt.ylabel('amount')
+        plt.hist(countries)
+        plt.show()
     
-    plt.xlabel('country')
-    plt.ylabel('amount')
-    plt.hist(countries)
-    plt.show()
 
-def display_views_by_continent():
+def display_views_by_continent(doc_uuid):
     continents = []
+    isP = False
+    display_views_by_country(doc_uuid, isP)
     for i in countries:
         try:
             temp_continent = pc.country_alpha2_to_continent_code(i)
-            continents.append(temp_continent)
+            if (temp_continent == "SA"):
+                continents.append("South America")
+            if (temp_continent == "NA"):
+                continents.append("North America")
+            if (temp_continent == "AS"):
+                continents.append("Asia")
+            if (temp_continent == "OC"):
+                continents.append("Oceania")
+            if (temp_continent == "AF"):
+                continents.append("Africa")
+            if (temp_continent == "EU"):
+                continents.append("Europe")
+            if (temp_continent == "AN"):
+                continents.append("Antartica")
         except Exception:
             pass # another exception
     
@@ -309,9 +327,9 @@ def alsolikesgraph (doc_uuid, visitor_uuid=None):
 
     
 # testing the functions here
-#display_views_by_country("doc_uuid")
+display_views_by_continent("140310170010-0000000067dc80801f1df696ae52862b")
 #display_views_by_continent()
-display_views_by_browser_part_a()
+#display_views_by_browser_part_a()
 
 #display_viewtime_by_userid("130927071110-0847713a13bea63d7f359ea012f3538d")
 
