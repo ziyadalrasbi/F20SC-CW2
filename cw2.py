@@ -61,7 +61,7 @@ def display_views_by_continent():
     plt.hist(continents)
     plt.show()
 
-def display_views_by_browser_a():
+def display_views_by_browser_short_a():
     #create a list of visitors and make it empty
     vislist = []
     #for every viewer in the dataset
@@ -107,7 +107,7 @@ def display_views_by_browser_a():
     plt.show()
     
 
-def display_views_by_browser_b(): 
+def display_views_by_browser_short_b(): 
     browsers = []
     already_viewed = []
     for viewer in data:
