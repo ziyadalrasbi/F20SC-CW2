@@ -295,9 +295,10 @@ def alsolikesgraph (doc_uuid, visitor_uuid=None):
     visitors = return_visitors_by_docid(doc_uuid)
     docs = also_likes(doc_uuid)
     discarddocs = []
-    for doc in return_docs_by_userid(visitor_uuid):
-        if doc != doc_uuid:
-            discarddocs = doc
+    if(visitor_uuid != None):
+        for doc in return_docs_by_userid(visitor_uuid):
+            if doc != doc_uuid:
+                discarddocs = doc
     gV = graphviz.Digraph('visitor', node_attr={'shape' : 'rectangle'})
     gD = graphviz.Digraph('document', node_attr={'shape' : 'circle'})
     gD.graph_attr.update(rank='max')
@@ -343,4 +344,4 @@ def alsolikesgraph (doc_uuid, visitor_uuid=None):
 
 
 #return_docs_by_userid("50ac35b7a0474b3e")
-alsolikesgraph("100806162735-00000000115598650cb8b514246272b5","00000000deadbeef")
+alsolikesgraph("100806162735-00000000115598650cb8b514246272b5")
