@@ -17,7 +17,7 @@ browsers = []
 
 
 #open the json file and call it dataset
-dataset = open("test400.json", 'r', encoding='utf-8')
+dataset = open("test100.json", 'r', encoding='utf-8')
 Lines = dataset.readlines()
 
 #for every line in the json file
@@ -283,7 +283,7 @@ def also_likes(doc_uuid, visitor_uuid=None):
     return also_likes_docs
 
 def also_likes_top_10 (doc_uuid, visitor_uuid=None):
-    top10docs = also_likes(doc_uuid)
+    top10docs = also_likes(doc_uuid, visitor_uuid)
     counter = Counter(top10docs)
     top10docsarranged = counter.most_common(11)
     print("also likes (document ID : Number of reads):")
@@ -294,30 +294,38 @@ def also_likes_top_10 (doc_uuid, visitor_uuid=None):
 def alsolikesgraph (doc_uuid, visitor_uuid=None):
     visitors = return_visitors_by_docid(doc_uuid)
     docs = also_likes(doc_uuid)
-    gD = graphviz.Digraph('document', node_attr={'shape' : 'circle'})
-    gD.graph_attr.update(rank='min')
+    discarddocs = []
+    for doc in return_docs_by_userid(visitor_uuid):
+        if doc != doc_uuid:
+            discarddocs = doc
     gV = graphviz.Digraph('visitor', node_attr={'shape' : 'rectangle'})
-    gV.graph_attr.update(rank='max')
+    gD = graphviz.Digraph('document', node_attr={'shape' : 'circle'})
+    gD.graph_attr.update(rank='max')
+    gV.graph_attr.update(rank='min')
     for doc in docs:
         if (doc == doc_uuid):
             gD.node(doc, str((doc)[-4:]), fillcolor='green', style='filled', shape='circle')
         else:
-            gD.node(doc, str((doc[-4:])), fillcolor='white', shape='circle')
+            if doc in discarddocs:
+                continue
+            else:
+                gD.node(doc, str((doc[-4:])), fillcolor='white', shape='circle')
     for visitor in visitors:
-        
         if(return_docs_by_userid(visitor) != None):
-            gV.node(visitor, str(visitor[-4:]), fillcolor='white', style='filled', shape='rectangle')
-            for  doc in return_docs_by_userid(visitor):
+            if(visitor == visitor_uuid):
+                gV.node(visitor, str(visitor[-4:]), fillcolor='green', style='filled', shape='rectangle')
                 try:
-                    gV.edge(visitor, doc)
-        #gV.edge(visitor, doc_uuid)
+                        gV.edge(visitor, doc_uuid)
                 except Exception:
-                    pass # do something here for the exception    
-
-    
-    
+                    pass # do something here for the exception
+            else:
+                gV.node(visitor, str(visitor[-4:]), fillcolor='white', style='filled', shape='rectangle')
+                for  doc in return_docs_by_userid(visitor):
+                    try:
+                        gV.edge(visitor, doc)
+                    except Exception:
+                        pass # do something here for the exception    
     gV.subgraph(gD)
-    
     gV.format = 'png'
     gV.render(directory='doctest-output', view=True)
 
@@ -327,7 +335,7 @@ def alsolikesgraph (doc_uuid, visitor_uuid=None):
 
     
 # testing the functions here
-display_views_by_continent("140310170010-0000000067dc80801f1df696ae52862b")
+#display_views_by_continent("140310170010-0000000067dc80801f1df696ae52862b")
 #display_views_by_continent()
 #display_views_by_browser_part_a()
 
@@ -335,4 +343,4 @@ display_views_by_continent("140310170010-0000000067dc80801f1df696ae52862b")
 
 
 #return_docs_by_userid("50ac35b7a0474b3e")
-#alsolikesgraph("140310170010-0000000067dc80801f1df696ae52862b")
+alsolikesgraph("100806162735-00000000115598650cb8b514246272b5","00000000deadbeef")
