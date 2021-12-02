@@ -1,4 +1,5 @@
 import json
+import sys
 from json.decoder import JSONDecodeError
 from os import system                                     #import the json library to allow for the use of the dataset
 import matplotlib.pyplot as plt                 #import matplotlib library to plot the graphs for tasks 2, 3 and 4
@@ -610,6 +611,7 @@ class Task8:
         task5 = Task5(self.doc_uuid, self.visitor_uuid)
         task6 = Task6(self.doc_uuid, self.visitor_uuid)
         task7 = Gui()
+    
         if id == '2a':
             task2.display_views_by_country()
         if id == '2b':
@@ -652,5 +654,11 @@ class Task8:
 # task3 = Task3()
 # task3.display_views_by_browser_short_b()
 
-gui = Gui()
-gui.make_gui()
+if len(sys.argv) == 1:
+    gui = Gui() 
+    gui.make_gui()
+    sys.exit()
+else:
+    cmd = Task8()
+    cmd.cmd_checking()
+    sys.exit()
