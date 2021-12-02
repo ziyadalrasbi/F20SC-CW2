@@ -19,7 +19,7 @@ data = []
 
 
 #open the json file and call it dataset
-dataset = open("testss.json", 'r', encoding='utf-8')
+dataset = open("testxxl.json", 'r', encoding='utf-8')
 Lines = dataset.readlines()
 
 #for every line in the json file
@@ -225,38 +225,40 @@ class Task3:
         plt.show()
 
 
+class Task4:
+
+    def __init__(self):
+        return
     
-def display_viewtime_by_userid():
-    total_readtime = 0
-    visitor_ids = list(set([visitor['visitor_uuid'] for visitor in data]))
-    viewtime = dict([(visitor, 0) for visitor in visitor_ids])
-    for id in viewtime:
+    def display_viewtime_by_userid():
         total_readtime = 0
+        visitor_ids = list(set([visitor['visitor_uuid'] for visitor in data]))
+        viewtime = dict([(visitor, 0) for visitor in visitor_ids])
+        
+        # O(N) time complexity solution found
+        # faster than O(N^2)
         for viewer in data:
             try:
-                if (id == viewer['visitor_uuid']):
-                    temp_readtime = viewer['event_readtime']
-                    total_readtime += temp_readtime
-                    viewtime[id] = total_readtime
-                    print(viewtime)
+                total_readtime = viewer['event_readtime']
+                viewtime[viewer['visitor_uuid']] += total_readtime
             except Exception:
                 pass
-    
-    time_sorted = list(sorted(viewtime.items(), key=lambda kv: kv[1], reverse=True))[:10]
-    users = []
-    times = []
+        
+        time_sorted = list(sorted(viewtime.items(), key=lambda kv: kv[1], reverse=True))[:10]
+        users = []
+        times = []
 
-    for viewer in time_sorted:
-        users.append(viewer[0])
-        times.append(viewer[1])
+        for viewer in time_sorted:
+            users.append(viewer[0])
+            times.append(viewer[1])
 
-    plt.grid(axis='y', alpha=0.75)
-    plt.xlabel('viewer ID')
-    plt.ylabel('time spent')
-    plt.bar(users, times)
-    current_values = plt.gca().get_yticks()
-    plt.gca().set_yticklabels(['{:.0f}'.format(x) for x in current_values])
-    plt.show()
+        plt.grid(axis='y', alpha=0.75)
+        plt.xlabel('viewer ID')
+        plt.ylabel('time spent')
+        plt.bar(users, times)
+        current_values = plt.gca().get_yticks()
+        plt.gca().set_yticklabels(['{:.0f}'.format(x) for x in current_values])
+        plt.show()
 
 
 # Task 5 and 6
@@ -369,29 +371,38 @@ class Task6:
         gV.format = 'png'
         gV.render(directory='doctest-output', view=True)
 
-            
-            
+  
 
-def make_gui():
-    window = Tk()
+class Gui:
 
-    window.title("Welcome to LikeGeeks app")
+    def __init__(self):
+        return
 
-    window.geometry('350x200')
+    def make_gui(self):
+        window = Tk()
 
-    lbl = Label(window, text="Hello")
+        window.title("Data Document Tracker")
 
-    lbl.grid(column=0, row=0)
+        window.geometry('350x200')
 
-    btn = Button(window, text="Click Me", command=clicked)
+        lbl = Label(window, text="Hello")
 
-    btn.grid(column=1, row=0)
+        lbl.grid(column=0, row=0)
 
-    window.mainloop()
+        txt = Entry(window,width=10)
+
+        txt.grid(column=1, row=0)
+
+        btn = Button(window, text="Click Me", command=self.task2(txt.get()))
+
+        btn.grid(column=2, row=0)
+
+        window.mainloop()
 
 
-def clicked():
-    Task3.display_views_by_browser_short_a()
+    def task2(self, doc_uuid):
+        task2 = Task2(doc_uuid, True)
+        task2.display_views_by_country()
 
     
 # testing the functions here
@@ -412,4 +423,5 @@ def clicked():
 # task3 = Task3()
 # task3.display_views_by_browser_short_b()
 
-display_viewtime_by_userid()
+gui = Gui()
+gui.make_gui()
