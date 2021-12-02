@@ -1,4 +1,5 @@
-import json                                     #import the json library to allow for the use of the dataset
+import json
+from json.decoder import JSONDecodeError                                     #import the json library to allow for the use of the dataset
 import matplotlib.pyplot as plt                 #import matplotlib library to plot the graphs for tasks 2, 3 and 4
 import pycountry_convert as pc                  #import the pycountry_convert library to gain access to a library of country and continent codes for task 3
 from collections import Counter                 #import the Counter library to allow for creating a top 10 list for viewer read time and also likes
@@ -8,22 +9,30 @@ import re                                       #import re to allow the use of r
 from tkinter import *                           #import tkinter to allow the implementation of a graphical user interface for task 7
 import argparse                                 #import argparse to create a command line interface
 
+
+
+class DataImport:
+
+    def __init__(self, data_list=[]):
+        self.data_list = data_list
+
+    def open_json(self, fname):
+        dataset = open(fname, 'r', encoding='utf-8')
+        Lines = dataset.readlines()
+        #for every line in the json file
+        for line in Lines:
+            try:
+                #y = a dictionary of every json object
+                dataDict = json.loads(line)
+                #add the json objects to the list "data"
+                self.data_list.append(dataDict)
+            except JSONDecodeError as e:
+                print("Error decoding JSON file, please ensure format is correct.")
+        dataset.close()
+        return self.data_list
+
 #create a global list called data
 data = []
-
-#open the json file and call it dataset
-dataset = open("tests.json", 'r', encoding='utf-8')
-Lines = dataset.readlines()
-
-#for every line in the json file
-for line in Lines:
-    #y = a dictionary of every json object
-    dataDict = json.loads(line)
-    #add the json objects to the list "data"
-    data.append(dataDict)
-    
-dataset.close()
-
 # Task 2
 class Task2:
     #create an empty list called countries accessible by any function within this class
@@ -563,6 +572,8 @@ class Task8:
         self.cmd_args = self.cmd_parser.parse_args()
 
     def cmd_checking(self):
+        global data
+        import_data = DataImport() 
         if self.cmd_args.uid:
             self.visitor_uuid = self.cmd_args.uid
         if self.cmd_args.t is None:
@@ -574,7 +585,7 @@ class Task8:
         if self.cmd_args.f is None:
             print("No JSON file path provided, please re-enter.")
         self.doc_uuid = self.cmd_args.d
-        self.file_name = self.cmd_args.f
+        data = import_data.open_json(self.cmd_args.f)
         self.cmd_execute(self.cmd_args.t)
         
     def cmd_execute(self, id):
