@@ -1,5 +1,6 @@
 import json
-from json.decoder import JSONDecodeError                                     #import the json library to allow for the use of the dataset
+from json.decoder import JSONDecodeError
+from os import system                                     #import the json library to allow for the use of the dataset
 import matplotlib.pyplot as plt                 #import matplotlib library to plot the graphs for tasks 2, 3 and 4
 import pycountry_convert as pc                  #import the pycountry_convert library to gain access to a library of country and continent codes for task 3
 from collections import Counter                 #import the Counter library to allow for creating a top 10 list for viewer read time and also likes
