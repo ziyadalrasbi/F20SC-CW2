@@ -1,3 +1,4 @@
+import sys
 import json
 from json.decoder import JSONDecodeError
 from os import system                                     #import the json library to allow for the use of the dataset
@@ -506,7 +507,7 @@ class Gui:
         vis_uuid_entry = Entry(window,width=130)
         vis_uuid_entry.place(x = 95, y = 70)
 
-        btnFile = Button(window, text="Select input data file", bg='white', width = 40, command=lambda: self.changefile(changefile_entry.get()))
+        btnFile = Button(window, text="Select input data file", bg='white', width = 40, command=lambda: self.changefile())
         btnFile.place(x = 3, y = 10)
         
         btn2a = Button(window, text="2a. Views by Country", bg='white', width = 30, command=lambda: self.task2a(doc_uuid_entry.get()))
@@ -528,7 +529,7 @@ class Gui:
 
         window.mainloop()
 
-    def changefile(self, file):
+    def changefile(self):
         Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
         jfile = askopenfilename() # show an "Open" dialog box and return the path to the selected file
         global data
@@ -652,5 +653,11 @@ class Task8:
 # task3 = Task3()
 # task3.display_views_by_browser_short_b()
 
-gui = Gui()
-gui.make_gui()
+if len(sys.argv) == 1:
+    gui = Gui() 
+    gui.make_gui()
+    sys.exit()
+else:
+    cmd = Task8()
+    cmd.cmd_checking()
+    sys.exit()
