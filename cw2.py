@@ -7,6 +7,7 @@ import graphviz                                 #import graphviz to plot the gra
 import httpagentparser                          #import the httpagentparser library to gain access to a library of browsers by agentparser strings for task 3
 import re                                       #import re to allow the use of regular expressions in task 3
 from tkinter import *                           #import tkinter to allow the implementation of a graphical user interface for task 7
+from tkinter.filedialog import askopenfilename
 import argparse                                 #import argparse to create a command line interface
 
 
@@ -480,27 +481,39 @@ class Gui:
     def __init__(self):
         return
 
-    def make_gui(self):
+    def make_gui(self):   
         visitorEmpty = None
+        jfile = None
         window = Tk()
         window.title("Data Document Tracker")
         window.geometry('900x500')
         window.configure(bg='white')
 
         doc_uuid_label = Label(window, text="Document UUID:")
-        doc_uuid_label.place(x = 3, y = 5)
+        doc_uuid_label.place(x = 3, y = 85)
         doc_uuid_label.configure(bg='white')
         vis_uuid_label = Label(window, text="Visitor UUID:")
-        vis_uuid_label.place(x = 25, y = 30)
+        vis_uuid_label.place(x = 25, y = 110)
         vis_uuid_label.configure(bg='white')
 
         doc_uuid_entry = Entry(window,width=130)
-        doc_uuid_entry.place(x = 95, y = 5)
+        doc_uuid_entry.place(x = 95, y = 85)
         vis_uuid_entry = Entry(window,width=130)
-        vis_uuid_entry.place(x = 95, y = 30)
+        vis_uuid_entry.place(x = 95, y = 110)
 
-            
+        currentfile_label = Label(window, text="Current data file: " + jfile)
+        currentfile_label.place(x = 3, y = 5)
+        currentfile_label.configure(bg='white')
+        changefile_label = Label(window, text="Enter new data file: ")
+        changefile_label.place(x = 3, y = 30)
+        changefile_label.configure(bg='white')
+        changefile_entry = Entry(window, width=30)
+        changefile_entry.place(x = 115, y = 30)
 
+
+        btnFile = Button(window, text="Set new input data file", bg='white', width = 40, command=lambda: self.changefile(changefile_entry.get()))
+        btnFile.place(x = 3, y = 55)
+        
         btn2a = Button(window, text="2a. Views by Country", bg='white', width = 30, command=lambda: self.task2a(doc_uuid_entry.get()))
         btn2b = Button(window, text="2b. Views by Continent", bg='white', width = 30, command=lambda: self.task2b(doc_uuid_entry.get()))
         btn3a = Button(window, text="3a. Views by Browser", bg='white', width = 30, command=self.task3a)
@@ -508,19 +521,26 @@ class Gui:
         btn3b2 = Button(window, text="3b. Views by Browser Method 2", bg='white', width = 30, command=self.task3b2)
         btn4 = Button(window, text="4. View Time by User", bg='white', width = 30, command=self.task4)
         btn5 = Button(window, text="5/6. Display Also Likes Graph", bg='white', width = 30, command=lambda: self.task5and6helper(doc_uuid_entry.get(), vis_uuid_entry.get()))
-        
-        btn2a.place(x = 660, y = 55)
-        btn2b.place(x = 660, y = 85)
-        btn3a.place(x = 660, y = 115)
-        btn3b1.place(x = 660, y = 145)
-        btn3b2.place(x = 660, y = 175)
-        btn4.place(x = 660, y = 205)
-        btn5.place(x = 660, y = 235)
+
+        btn2a.place(x = 660, y = 140)
+        btn2b.place(x = 660, y = 170)
+        btn3a.place(x = 660, y = 200)
+        btn3b1.place(x = 660, y = 230)
+        btn3b2.place(x = 660, y = 260)
+        btn4.place(x = 660, y = 290)
+        btn5.place(x = 660, y = 320)
 
 
         window.mainloop()
 
-
+    def changefile(self, file):
+        Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+        jfile = askopenfilename() # show an "Open" dialog box and return the path to the selected file
+        global data  
+        import_data = DataImport()
+        data = import_data.open_json(jfile)
+        print("File has been changed to: " + jfile)
+    
     def task2a(self, doc_uuid):
         task2 = Task2(doc_uuid, True)
         task2.display_views_by_country()
@@ -613,8 +633,8 @@ class Task8:
 
             
 
-task8 = Task8()
-task8.cmd_checking()
+#task8 = Task8()
+#task8.cmd_checking()
 
 
 
@@ -636,5 +656,5 @@ task8.cmd_checking()
 # task3 = Task3()
 # task3.display_views_by_browser_short_b()
 
-# gui = Gui()
-# gui.make_gui()
+gui = Gui()
+gui.make_gui()
