@@ -6,12 +6,13 @@ import graphviz                                 #import graphviz to plot the gra
 import httpagentparser                          #import the httpagentparser library to gain access to a library of browsers by agentparser strings for task 3
 import re                                       #import re to allow the use of regular expressions in task 3
 from tkinter import *                           #import tkinter to allow the implementation of a graphical user interface for task 7
+import argparse                                 #import argparse to create a command line interface
 
 #create a global list called data
 data = []
 
 #open the json file and call it dataset
-dataset = open("test100.json", 'r', encoding='utf-8')
+dataset = open("tests.json", 'r', encoding='utf-8')
 Lines = dataset.readlines()
 
 #for every line in the json file
@@ -515,6 +516,67 @@ class Gui:
         else:
             self.task5and6(doc_uuid, visitor_uuid)
     
+class Task8:
+
+    def __init__(self, doc_uuid=None, visitor_uuid=None, file_name=None):
+        self.doc_uuid = doc_uuid
+        self.visitor_uuid = visitor_uuid
+        self.file_name = file_name
+        # using the argparse library to create an initial parser for command line interface commands
+        self.cmd_parser = argparse.ArgumentParser(description= 'Document Tracker interface.')
+        # visitor uid is optional: made option with the --uid flag
+        self.cmd_parser.add_argument('-u', '--uid', type=str, help='The visitor ID to analyse.')
+        # remaining commands are mandatory
+        self.cmd_parser.add_argument('-d', type=str, help='The document ID to analyse.')
+        self.cmd_parser.add_argument('-t', type=str, help='The specified task to anaylse.')
+        self.cmd_parser.add_argument('-f', type=str, help='The path to the JSON file.')
+        self.cmd_args = self.cmd_parser.parse_args()
+
+    def cmd_checking(self):
+        if self.cmd_args.uid:
+            self.visitor_uuid = self.cmd_args.uid
+        if self.cmd_args.t is None:
+            print("No task ID provided, please re-enter.")
+        if self.cmd_args.t not in ['2a', '2b', '3a', '3b', '4', '5d', '6', '7']:
+            print("Invalid task ID provided, please re-enter (options: 2a, 2b, 3a, 3b, 4, 5d, 6, 7).")
+        if self.cmd_args.d is None:
+            print("No document ID provided, please re-enter.")
+        if self.cmd_args.f is None:
+            print("No JSON file path provided, please re-enter.")
+        self.doc_uuid = self.cmd_args.d
+        self.file_name = self.cmd_args.f
+        self.cmd_execute(self.cmd_args.t)
+        
+    def cmd_execute(self, id):
+        task2 = Task2(self.doc_uuid, True)
+        task3 = Task3()
+        task5 = Task5(self.doc_uuid, self.visitor_uuid)
+        task6 = Task6(self.doc_uuid, self.visitor_uuid)
+        task7 = Gui()
+        if id == '2a':
+            task2.display_views_by_country()
+        if id == '2b':
+            task2.display_views_by_continent()
+        if id == '3a':
+            task3.display_views_by_browser_part_a()
+        if id == '3b':
+            task3.display_views_by_browser_short_a()
+        if id == '4':
+            Task4.display_viewtime_by_userid()
+        if id == '5d':
+            task5.also_likes_top_10(self.doc_uuid, self.visitor_uuid)
+        if id == '6':
+            task6.alsolikesgraph()
+        if id == '7':
+            task7.make_gui()
+
+            
+
+task8 = Task8()
+task8.cmd_checking()
+
+
+
 # testing the functions here
 #display_views_by_continent("140310170010-0000000067dc80801f1df696ae52862b")
 #display_views_by_continent()
@@ -533,5 +595,5 @@ class Gui:
 # task3 = Task3()
 # task3.display_views_by_browser_short_b()
 
-gui = Gui()
-gui.make_gui()
+# gui = Gui()
+# gui.make_gui()
