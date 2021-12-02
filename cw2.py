@@ -1,3 +1,4 @@
+import sys
 import json
 import sys
 from json.decoder import JSONDecodeError
@@ -507,7 +508,7 @@ class Gui:
         vis_uuid_entry = Entry(window,width=130)
         vis_uuid_entry.place(x = 95, y = 70)
 
-        btnFile = Button(window, text="Select input data file", bg='white', width = 40, command=lambda: self.changefile(changefile_entry.get()))
+        btnFile = Button(window, text="Select input data file", bg='white', width = 40, command=lambda: self.changefile())
         btnFile.place(x = 3, y = 10)
         
         btn2a = Button(window, text="2a. Views by Country", bg='white', width = 30, command=lambda: self.task2a(doc_uuid_entry.get()))
@@ -529,7 +530,7 @@ class Gui:
 
         window.mainloop()
 
-    def changefile(self, file):
+    def changefile(self):
         Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
         jfile = askopenfilename() # show an "Open" dialog box and return the path to the selected file
         global data
