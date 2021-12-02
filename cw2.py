@@ -19,7 +19,7 @@ data = []
 
 
 #open the json file and call it dataset
-dataset = open("testxxl.json", 'r', encoding='utf-8')
+dataset = open("tests.json", 'r', encoding='utf-8')
 Lines = dataset.readlines()
 
 #for every line in the json file
@@ -380,30 +380,64 @@ class Gui:
 
     def make_gui(self):
         window = Tk()
-
         window.title("Data Document Tracker")
-
         window.geometry('350x200')
 
-        lbl = Label(window, text="Hello")
+        doc_uuid_label = Label(window, text="Document UUID")
+        doc_uuid_label.grid(column=0, row=0)
+        doc_uuid_label = Label(window, text="Visitor UUID")
+        doc_uuid_label.grid(column=0, row=2)
 
-        lbl.grid(column=0, row=0)
+        doc_uuid_entry = Entry(window,width=10)
+        doc_uuid_entry.grid(column=1, row=0)
+        vis_uuid_entry = Entry(window,width=10)
+        vis_uuid_entry.grid(column=1, row=2)
 
-        txt = Entry(window,width=10)
+        btn2a = Button(window, text="2a. Views by Country", command=lambda: self.task2a(doc_uuid_entry.get()))
+        btn2b = Button(window, text="2b. Views by Continent", command=lambda: self.task2b(doc_uuid_entry.get()))
+        btn3a = Button(window, text="3a. Views by Browser", command=self.task3a)
+        btn3b1 = Button(window, text="3b. Views by Browser Method 1", command=self.task3b1)
+        btn3b2 = Button(window, text="3b. Views by Browser Method 2", command=self.task3b2)
+        btn4 = Button(window, text="4. View Time by User", command=self.task4)
+        btn5 = Button(window, text="5/6. Display Also Likes Graph", command=lambda: self.task5and6(doc_uuid_entry.get(), vis_uuid_entry.get()))
 
-        txt.grid(column=1, row=0)
-
-        btn = Button(window, text="Click Me", command=self.task2(txt.get()))
-
-        btn.grid(column=2, row=0)
+        btn2a.grid(column=2, row=0)
+        btn2b.grid(column=4, row=0)
+        btn3a.grid(column=6, row=0)
+        btn3b1.grid(column=8, row=0)
+        btn3b2.grid(column=10, row=0)
+        btn4.grid(column=12, row=0)
+        btn5.grid(column=14, row=0)
 
         window.mainloop()
 
 
-    def task2(self, doc_uuid):
+    def task2a(self, doc_uuid):
         task2 = Task2(doc_uuid, True)
         task2.display_views_by_country()
+    
+    def task2b(self, doc_uuid):
+        task2 = Task2(doc_uuid, True)
+        task2.display_views_by_continent()
+    
+    def task3a(self):
+        task3 = Task3()
+        task3.display_views_by_browser_part_a()
 
+    def task3b1(self):
+        task3 = Task3()
+        task3.display_views_by_browser_short_a()
+    
+    def task3b2(self):
+        task3 = Task3()
+        task3.display_views_by_browser_short_b()
+
+    def task4(self):
+        Task4.display_viewtime_by_userid()
+    
+    def task5and6(self, doc_uuid, visitor_uuid=None):
+        task6 = Task6(doc_uuid, visitor_uuid)
+        task6.alsolikesgraph()
     
 # testing the functions here
 #display_views_by_continent("140310170010-0000000067dc80801f1df696ae52862b")
