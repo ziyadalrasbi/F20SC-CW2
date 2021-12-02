@@ -19,7 +19,7 @@ data = []
 
 
 #open the json file and call it dataset
-dataset = open("tests.json", 'r', encoding='utf-8')
+dataset = open("testss.json", 'r', encoding='utf-8')
 Lines = dataset.readlines()
 
 #for every line in the json file
@@ -412,6 +412,4 @@ def clicked():
 # task3 = Task3()
 # task3.display_views_by_browser_short_b()
 
-task6 = Task6('100806162735-00000000115598650cb8b514246272b5', '00000000deadbeef')
-
-task6.alsolikesgraph()
+display_viewtime_by_userid()

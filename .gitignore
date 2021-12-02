@@ -1,4 +1,5 @@
 env/
+doctest-output/
 testxl.json
 testxxl.json
 testl.json
