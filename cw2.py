@@ -11,7 +11,7 @@ from tkinter import *                           #import tkinter to allow the imp
 data = []
 
 #open the json file and call it dataset
-dataset = open("tests.json", 'r', encoding='utf-8')
+dataset = open("test100.json", 'r', encoding='utf-8')
 Lines = dataset.readlines()
 
 #for every line in the json file
@@ -36,6 +36,7 @@ class Task2:
     
     #-------------------------------------TASK 2A-------------------------------------
     def display_views_by_country(self):
+        self.countries = []
         #for every viewer within the dataset
         for viewer in data:
             try:
@@ -353,29 +354,42 @@ class Task5:
             also_likes_visitor = self.return_visitors_by_docid(temp)
             #for every visitor in the also_likes_visitor list
             for visitor in also_likes_visitor:
+                #if the list returned by return_docs_by_userid(currentvisitor) is not empty
                 if(self.return_docs_by_userid(visitor) != None):
+                    #extend the list by the list returned
                     also_likes_docs.extend(self.return_docs_by_userid(visitor))
+        #if there is an inputted visitor id
         else:
+            #extend the also_likes_docs by the list returned by return_docs_by_userid(visitor)
             also_likes_docs.extend(self.return_docs_by_userid(temp2))
-
+        #sort the documents
         also_likes_docs.sort()
+        #return the also_likes_docs list
         return also_likes_docs
 
+    #-------------------------------------TASK 5D-------------------------------------
     def also_likes_top_10 (self, temp, temp2=None):
+        #assign a list called top10docs the value of the list returned by the also_likes function
         top10docs = self.also_likes(temp, temp2)
+        #create a Counter called counter of the top10docs list (counts the amount of times that a document has been entered into the list and assigns that key a value)
         counter = Counter(top10docs)
+        #create a new list that counts the top 10 most occuring documents and the inputted document
         top10docsarranged = counter.most_common(11)
+        #print a key into the console
         print("also likes (document ID : Number of reads):")
+        #for every document in the top10docsarranged list, print the document id and the amount of times it has occured
         for doc in top10docsarranged:
             print(str(doc[0]) + " : " + str(doc[1]))
+        #return the top10documentsarranged list
         return top10docsarranged
 
+#Task 6
 class Task6:
-
+    #initialise the parameters used for the task4 objects
     def __init__(self, doc_uuid, visitor_uuid=None):
         self.doc_uuid = doc_uuid
         self.visitor_uuid = visitor_uuid
-
+    #-------------------------------------TASK 6-------------------------------------
     def alsolikesgraph (self):
         task5 = Task5(self.doc_uuid, self.visitor_uuid)
         visitors = task5.return_visitors_by_docid(self.doc_uuid)
@@ -414,7 +428,6 @@ class Task6:
                             gV.edge(visitor, doc)
                         except Exception:
                             pass # do something here for the exception
-        print(gV)
         gV.subgraph(gD)
        
         gV.format = 'png'
@@ -428,6 +441,7 @@ class Gui:
         return
 
     def make_gui(self):
+        visitorEmpty = None
         window = Tk()
         window.title("Data Document Tracker")
         window.geometry('350x200')
@@ -442,13 +456,19 @@ class Gui:
         vis_uuid_entry = Entry(window,width=10)
         vis_uuid_entry.grid(column=1, row=2)
 
+        if(vis_uuid_entry.get() == ""):
+            visitorEntry = None
+        else:
+            visitorEntry = vis_uuid_entry.get()
+            
+
         btn2a = Button(window, text="2a. Views by Country", command=lambda: self.task2a(doc_uuid_entry.get()))
         btn2b = Button(window, text="2b. Views by Continent", command=lambda: self.task2b(doc_uuid_entry.get()))
         btn3a = Button(window, text="3a. Views by Browser", command=self.task3a)
         btn3b1 = Button(window, text="3b. Views by Browser Method 1", command=self.task3b1)
         btn3b2 = Button(window, text="3b. Views by Browser Method 2", command=self.task3b2)
         btn4 = Button(window, text="4. View Time by User", command=self.task4)
-        btn5 = Button(window, text="5/6. Display Also Likes Graph", command=lambda: self.task5and6(doc_uuid_entry.get(), vis_uuid_entry.get()))
+        btn5 = Button(window, text="5/6. Display Also Likes Graph", command=lambda: self.task5and6helper(doc_uuid_entry.get(), vis_uuid_entry.get()))
 
         btn2a.grid(column=2, row=0)
         btn2b.grid(column=4, row=0)
@@ -487,6 +507,13 @@ class Gui:
     def task5and6(self, doc_uuid, visitor_uuid=None):
         task6 = Task6(doc_uuid, visitor_uuid)
         task6.alsolikesgraph()
+
+    def task5and6helper(self, doc_uuid, visitor_uuid):
+        visEmpty = None
+        if (visitor_uuid == ""):
+            self.task5and6(doc_uuid, visEmpty)
+        else:
+            self.task5and6(doc_uuid, visitor_uuid)
     
 # testing the functions here
 #display_views_by_continent("140310170010-0000000067dc80801f1df696ae52862b")
