@@ -12,6 +12,7 @@ from tkinter.filedialog import askopenfilename
 import argparse                                 #import argparse to create a command line interface
 
 
+data = []
 
 class DataImport:
 
@@ -19,6 +20,10 @@ class DataImport:
         self.data_list = data_list
 
     def open_json(self, fname):
+        global data
+        data = []
+        dataDict = []
+        self.data_list = []
         dataset = open(fname, 'r', encoding='utf-8')
         Lines = dataset.readlines()
         #for every line in the json file
@@ -34,7 +39,7 @@ class DataImport:
         return self.data_list
 
 #create a global list called data
-data = []
+
 # Task 2
 class Task2:
     #create an empty list called countries accessible by any function within this class
@@ -484,36 +489,25 @@ class Gui:
 
     def make_gui(self):   
         visitorEmpty = None
-        jfile = None
         window = Tk()
         window.title("Data Document Tracker")
         window.geometry('900x500')
         window.configure(bg='white')
 
         doc_uuid_label = Label(window, text="Document UUID:")
-        doc_uuid_label.place(x = 3, y = 85)
+        doc_uuid_label.place(x = 3, y = 40)
         doc_uuid_label.configure(bg='white')
         vis_uuid_label = Label(window, text="Visitor UUID:")
-        vis_uuid_label.place(x = 25, y = 110)
+        vis_uuid_label.place(x = 25, y = 70)
         vis_uuid_label.configure(bg='white')
 
         doc_uuid_entry = Entry(window,width=130)
-        doc_uuid_entry.place(x = 95, y = 85)
+        doc_uuid_entry.place(x = 95, y = 40)
         vis_uuid_entry = Entry(window,width=130)
-        vis_uuid_entry.place(x = 95, y = 110)
+        vis_uuid_entry.place(x = 95, y = 70)
 
-        currentfile_label = Label(window, text="Current data file: " + jfile)
-        currentfile_label.place(x = 3, y = 5)
-        currentfile_label.configure(bg='white')
-        changefile_label = Label(window, text="Enter new data file: ")
-        changefile_label.place(x = 3, y = 30)
-        changefile_label.configure(bg='white')
-        changefile_entry = Entry(window, width=30)
-        changefile_entry.place(x = 115, y = 30)
-
-
-        btnFile = Button(window, text="Set new input data file", bg='white', width = 40, command=lambda: self.changefile(changefile_entry.get()))
-        btnFile.place(x = 3, y = 55)
+        btnFile = Button(window, text="Select input data file", bg='white', width = 40, command=lambda: self.changefile(changefile_entry.get()))
+        btnFile.place(x = 3, y = 10)
         
         btn2a = Button(window, text="2a. Views by Country", bg='white', width = 30, command=lambda: self.task2a(doc_uuid_entry.get()))
         btn2b = Button(window, text="2b. Views by Continent", bg='white', width = 30, command=lambda: self.task2b(doc_uuid_entry.get()))
@@ -523,13 +517,13 @@ class Gui:
         btn4 = Button(window, text="4. View Time by User", bg='white', width = 30, command=self.task4)
         btn5 = Button(window, text="5/6. Display Also Likes Graph", bg='white', width = 30, command=lambda: self.task5and6helper(doc_uuid_entry.get(), vis_uuid_entry.get()))
 
-        btn2a.place(x = 660, y = 140)
-        btn2b.place(x = 660, y = 170)
-        btn3a.place(x = 660, y = 200)
-        btn3b1.place(x = 660, y = 230)
-        btn3b2.place(x = 660, y = 260)
-        btn4.place(x = 660, y = 290)
-        btn5.place(x = 660, y = 320)
+        btn2a.place(x = 660, y = 110)
+        btn2b.place(x = 660, y = 140)
+        btn3a.place(x = 660, y = 170)
+        btn3b1.place(x = 660, y = 200)
+        btn3b2.place(x = 660, y = 230)
+        btn4.place(x = 660, y = 260)
+        btn5.place(x = 660, y = 290)
 
 
         window.mainloop()
@@ -537,8 +531,9 @@ class Gui:
     def changefile(self, file):
         Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
         jfile = askopenfilename() # show an "Open" dialog box and return the path to the selected file
-        global data  
+        global data
         import_data = DataImport()
+        data = []
         data = import_data.open_json(jfile)
         print("File has been changed to: " + jfile)
     
