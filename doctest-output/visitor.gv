@@ -1,6 +1,7 @@
 digraph visitor {
 	graph [rank=min]
 	node [shape=rectangle]
+<<<<<<< HEAD
 	"3c01241d5c3a8a3e" [label="8a3e" fillcolor=white shape=rectangle style=filled]
 	"3c01241d5c3a8a3e" -> "140310165657-0000000068d21bb99dec3ad6ee60aa0e"
 	"3c01241d5c3a8a3e" -> "140310171202-000000002e5a8ff1f577548fec708d50"
@@ -11,9 +12,19 @@ digraph visitor {
 	"4065369dbee2b902" -> "140310171114-00000000950ae9deb4faca996b0ec076"
 	"4065369dbee2b902" -> "140310171202-000000002e5a8ff1f577548fec708d50"
 	"4065369dbee2b902" -> "140310170010-0000000067dc80801f1df696ae52862b"
+=======
+	"4108dc09bfe11a0c" [label="1a0c" fillcolor=white shape=rectangle style=filled]
+	"4108dc09bfe11a0c" -> "100405170355-00000000ee4bfd24d2ff703b9147dd59"
+	"4108dc09bfe11a0c" -> "100806162735-00000000115598650cb8b514246272b5"
+	"4108dc09bfe11a0c" -> "100806172045-0000000081705fbea3553bd0d745b92f"
+	"4108dc09bfe11a0c" -> "101122221951-00000000a695c340822e61891c8f14cf"
+	"00000000deadbeef" [label=beef fillcolor=green shape=rectangle style=filled]
+	"00000000deadbeef" -> "100806162735-00000000115598650cb8b514246272b5"
+>>>>>>> 1e4415ae1d696779caf540b89c7ae98fe3770b2d
 	subgraph document {
-		graph [rank=max]
+		graph [rank=max shape=circle]
 		node [shape=circle]
+<<<<<<< HEAD
 		"140310165657-0000000068d21bb99dec3ad6ee60aa0e" [label=aa0e fillcolor=white shape=circle]
 		"140310170010-0000000067dc80801f1df696ae52862b" [label="862b" fillcolor=green shape=circle style=filled]
 		"140310170010-0000000067dc80801f1df696ae52862b" [label="862b" fillcolor=green shape=circle style=filled]
@@ -22,5 +33,11 @@ digraph visitor {
 		"140310171114-00000000950ae9deb4faca996b0ec076" [label=c076 fillcolor=white shape=circle]
 		"140310171202-000000002e5a8ff1f577548fec708d50" [label="8d50" fillcolor=white shape=circle]
 		"140310171202-000000002e5a8ff1f577548fec708d50" [label="8d50" fillcolor=white shape=circle]
+=======
+		"100806162735-00000000115598650cb8b514246272b5" [label="72b5" fillcolor=green shape=circle style=filled]
+		"100405170355-00000000ee4bfd24d2ff703b9147dd59" [label=dd59 fillcolor=white shape=circle style=filled]
+		"100806172045-0000000081705fbea3553bd0d745b92f" [label=b92f fillcolor=white shape=circle style=filled]
+		"101122221951-00000000a695c340822e61891c8f14cf" [label="14cf" fillcolor=white shape=circle style=filled]
+>>>>>>> 1e4415ae1d696779caf540b89c7ae98fe3770b2d
 	}
 }
