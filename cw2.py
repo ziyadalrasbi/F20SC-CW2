@@ -474,39 +474,39 @@ class Gui:
         visitorEmpty = None
         window = Tk()
         window.title("Data Document Tracker")
-        window.geometry('350x200')
+        window.geometry('900x500')
+        window.configure(bg='white')
 
-        doc_uuid_label = Label(window, text="Document UUID")
-        doc_uuid_label.grid(column=0, row=0)
-        doc_uuid_label = Label(window, text="Visitor UUID")
-        doc_uuid_label.grid(column=0, row=2)
+        doc_uuid_label = Label(window, text="Document UUID:")
+        doc_uuid_label.place(x = 3, y = 5)
+        doc_uuid_label.configure(bg='white')
+        vis_uuid_label = Label(window, text="Visitor UUID:")
+        vis_uuid_label.place(x = 25, y = 30)
+        vis_uuid_label.configure(bg='white')
 
-        doc_uuid_entry = Entry(window,width=10)
-        doc_uuid_entry.grid(column=1, row=0)
-        vis_uuid_entry = Entry(window,width=10)
-        vis_uuid_entry.grid(column=1, row=2)
+        doc_uuid_entry = Entry(window,width=130)
+        doc_uuid_entry.place(x = 95, y = 5)
+        vis_uuid_entry = Entry(window,width=130)
+        vis_uuid_entry.place(x = 95, y = 30)
 
-        if(vis_uuid_entry.get() == ""):
-            visitorEntry = None
-        else:
-            visitorEntry = vis_uuid_entry.get()
             
 
-        btn2a = Button(window, text="2a. Views by Country", command=lambda: self.task2a(doc_uuid_entry.get()))
-        btn2b = Button(window, text="2b. Views by Continent", command=lambda: self.task2b(doc_uuid_entry.get()))
-        btn3a = Button(window, text="3a. Views by Browser", command=self.task3a)
-        btn3b1 = Button(window, text="3b. Views by Browser Method 1", command=self.task3b1)
-        btn3b2 = Button(window, text="3b. Views by Browser Method 2", command=self.task3b2)
-        btn4 = Button(window, text="4. View Time by User", command=self.task4)
-        btn5 = Button(window, text="5/6. Display Also Likes Graph", command=lambda: self.task5and6helper(doc_uuid_entry.get(), vis_uuid_entry.get()))
+        btn2a = Button(window, text="2a. Views by Country", bg='white', width = 30, command=lambda: self.task2a(doc_uuid_entry.get()))
+        btn2b = Button(window, text="2b. Views by Continent", bg='white', width = 30, command=lambda: self.task2b(doc_uuid_entry.get()))
+        btn3a = Button(window, text="3a. Views by Browser", bg='white', width = 30, command=self.task3a)
+        btn3b1 = Button(window, text="3b. Views by Browser Method 1", bg='white', width = 30, command=self.task3b1)
+        btn3b2 = Button(window, text="3b. Views by Browser Method 2", bg='white', width = 30, command=self.task3b2)
+        btn4 = Button(window, text="4. View Time by User", bg='white', width = 30, command=self.task4)
+        btn5 = Button(window, text="5/6. Display Also Likes Graph", bg='white', width = 30, command=lambda: self.task5and6helper(doc_uuid_entry.get(), vis_uuid_entry.get()))
+        
+        btn2a.place(x = 660, y = 55)
+        btn2b.place(x = 660, y = 85)
+        btn3a.place(x = 660, y = 115)
+        btn3b1.place(x = 660, y = 145)
+        btn3b2.place(x = 660, y = 175)
+        btn4.place(x = 660, y = 205)
+        btn5.place(x = 660, y = 235)
 
-        btn2a.grid(column=2, row=0)
-        btn2b.grid(column=4, row=0)
-        btn3a.grid(column=6, row=0)
-        btn3b1.grid(column=8, row=0)
-        btn3b2.grid(column=10, row=0)
-        btn4.grid(column=12, row=0)
-        btn5.grid(column=14, row=0)
 
         window.mainloop()
 
