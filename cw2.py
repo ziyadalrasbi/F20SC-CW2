@@ -392,46 +392,76 @@ class Task6:
         self.visitor_uuid = visitor_uuid
     #-------------------------------------TASK 6-------------------------------------
     def alsolikesgraph (self):
+        #create an object called task 5 for the Task5 class and pass the
+        #doc_uuid and visitor_uuid of this class
         task5 = Task5(self.doc_uuid, self.visitor_uuid)
+        #create a new list and assign it the returned list of return_visitors_by_docid
         visitors = task5.return_visitors_by_docid(self.doc_uuid)
+        #create a new list and assign it the returned list of also_likes
         docs = task5.also_likes(self.doc_uuid, self.visitor_uuid)
+        #create an empty list called discarddocs
         discarddocs = []
+        #if there is  an inputted user id
         if(self.visitor_uuid != None):
+            #for every doc in return_docs_by_userid
             for doc in task5.return_docs_by_userid(self.visitor_uuid):
+                #if the current doc is not equal to the inputted doc_uuid,
+                #add the doc to the discarddocs list
                 if doc != self.doc_uuid:
                     discarddocs = doc
+        #create a new graph called gV and assign it's name and shape
         gV = graphviz.Digraph('visitor', node_attr={'shape' : 'rectangle'})
+        #create a new graph called gD and assign it's name and shape
         gD = graphviz.Digraph('document', node_attr={'shape' : 'circle'})
-        gD.graph_attr.update(rank='max', shape= 'circle' )
+        #add the rank attributes to each graph
+        gD.graph_attr.update(rank='max')
         gV.graph_attr.update(rank='min')
+        #for every doc in the docs list
         for doc in docs:
+            #if the current doc equals the inputted document
             if (doc == self.doc_uuid):
+                #add a circular node and colour it green
                 gD.node(doc, str((doc)[-4:]), fillcolor='green', style='filled', shape='circle')
             else:
+                #if the current doc is in the discarddocs list and the docs list, do nothing
                 if doc in discarddocs and doc in docs:
                     continue
+                #otherwise
                 else:
+                    #add a circular node and colour it white
                     gD.node(doc, str((doc[-4:])), fillcolor='white', style='filled', shape='circle')
+        #for every visitor in the visitors list
         for visitor in visitors:
+            #if the list returned by return_docs_by_userid is not empty
             if(task5.return_docs_by_userid(visitor) != None):
+                #if the current visitor equals the inputted visitor_uuid
                 if(visitor == self.visitor_uuid):
+                    #add a rectangle node and colour it green
                     gV.node(visitor, str(visitor[-4:]), fillcolor='green', style='filled', shape='rectangle')
                     try:
+                            #add an edge between the current visitor and the inputted document
                             gV.edge(visitor, self.doc_uuid)
                     except Exception:
                         pass # do something here for the exception
                 else:
+                    #add a rectangle node for the current visitor and colour it white
                     gV.node(visitor, str(visitor[-4:]), fillcolor='white', style='filled', shape='rectangle')
+                    #for every doc in the list returned by return_docs_by_userid for the current visitor
                     for  doc in task5.return_docs_by_userid(visitor):
                         try:
+                            #if the current doc is not equal to the inputted doc
                             if (doc != self.doc_uuid):
+                                #add a circular node and colour it white
                                 gD.node(doc, str((doc)[-4:]), fillcolor='white', style='filled', shape='circle')
+                            #add an edge between the current visitor and the current doc
                             gV.edge(visitor, doc)
                         except Exception:
                             pass # do something here for the exception
+        #connect the two graphs
         gV.subgraph(gD)
-       
+        #set the outputted graph's format to a png
         gV.format = 'png'
+        #render the graphs
         gV.render(directory='doctest-output', view=True)
 
   
@@ -445,39 +475,39 @@ class Gui:
         visitorEmpty = None
         window = Tk()
         window.title("Data Document Tracker")
-        window.geometry('350x200')
+        window.geometry('900x500')
+        window.configure(bg='white')
 
-        doc_uuid_label = Label(window, text="Document UUID")
-        doc_uuid_label.grid(column=0, row=0)
-        doc_uuid_label = Label(window, text="Visitor UUID")
-        doc_uuid_label.grid(column=0, row=2)
+        doc_uuid_label = Label(window, text="Document UUID:")
+        doc_uuid_label.place(x = 3, y = 5)
+        doc_uuid_label.configure(bg='white')
+        vis_uuid_label = Label(window, text="Visitor UUID:")
+        vis_uuid_label.place(x = 25, y = 30)
+        vis_uuid_label.configure(bg='white')
 
-        doc_uuid_entry = Entry(window,width=10)
-        doc_uuid_entry.grid(column=1, row=0)
-        vis_uuid_entry = Entry(window,width=10)
-        vis_uuid_entry.grid(column=1, row=2)
+        doc_uuid_entry = Entry(window,width=130)
+        doc_uuid_entry.place(x = 95, y = 5)
+        vis_uuid_entry = Entry(window,width=130)
+        vis_uuid_entry.place(x = 95, y = 30)
 
-        if(vis_uuid_entry.get() == ""):
-            visitorEntry = None
-        else:
-            visitorEntry = vis_uuid_entry.get()
             
 
-        btn2a = Button(window, text="2a. Views by Country", command=lambda: self.task2a(doc_uuid_entry.get()))
-        btn2b = Button(window, text="2b. Views by Continent", command=lambda: self.task2b(doc_uuid_entry.get()))
-        btn3a = Button(window, text="3a. Views by Browser", command=self.task3a)
-        btn3b1 = Button(window, text="3b. Views by Browser Method 1", command=self.task3b1)
-        btn3b2 = Button(window, text="3b. Views by Browser Method 2", command=self.task3b2)
-        btn4 = Button(window, text="4. View Time by User", command=self.task4)
-        btn5 = Button(window, text="5/6. Display Also Likes Graph", command=lambda: self.task5and6helper(doc_uuid_entry.get(), vis_uuid_entry.get()))
+        btn2a = Button(window, text="2a. Views by Country", bg='white', width = 30, command=lambda: self.task2a(doc_uuid_entry.get()))
+        btn2b = Button(window, text="2b. Views by Continent", bg='white', width = 30, command=lambda: self.task2b(doc_uuid_entry.get()))
+        btn3a = Button(window, text="3a. Views by Browser", bg='white', width = 30, command=self.task3a)
+        btn3b1 = Button(window, text="3b. Views by Browser Method 1", bg='white', width = 30, command=self.task3b1)
+        btn3b2 = Button(window, text="3b. Views by Browser Method 2", bg='white', width = 30, command=self.task3b2)
+        btn4 = Button(window, text="4. View Time by User", bg='white', width = 30, command=self.task4)
+        btn5 = Button(window, text="5/6. Display Also Likes Graph", bg='white', width = 30, command=lambda: self.task5and6helper(doc_uuid_entry.get(), vis_uuid_entry.get()))
+        
+        btn2a.place(x = 660, y = 55)
+        btn2b.place(x = 660, y = 85)
+        btn3a.place(x = 660, y = 115)
+        btn3b1.place(x = 660, y = 145)
+        btn3b2.place(x = 660, y = 175)
+        btn4.place(x = 660, y = 205)
+        btn5.place(x = 660, y = 235)
 
-        btn2a.grid(column=2, row=0)
-        btn2b.grid(column=4, row=0)
-        btn3a.grid(column=6, row=0)
-        btn3b1.grid(column=8, row=0)
-        btn3b2.grid(column=10, row=0)
-        btn4.grid(column=12, row=0)
-        btn5.grid(column=14, row=0)
 
         window.mainloop()
 
