@@ -391,46 +391,76 @@ class Task6:
         self.visitor_uuid = visitor_uuid
     #-------------------------------------TASK 6-------------------------------------
     def alsolikesgraph (self):
+        #create an object called task 5 for the Task5 class and pass the
+        #doc_uuid and visitor_uuid of this class
         task5 = Task5(self.doc_uuid, self.visitor_uuid)
+        #create a new list and assign it the returned list of return_visitors_by_docid
         visitors = task5.return_visitors_by_docid(self.doc_uuid)
+        #create a new list and assign it the returned list of also_likes
         docs = task5.also_likes(self.doc_uuid, self.visitor_uuid)
+        #create an empty list called discarddocs
         discarddocs = []
+        #if there is  an inputted user id
         if(self.visitor_uuid != None):
+            #for every doc in return_docs_by_userid
             for doc in task5.return_docs_by_userid(self.visitor_uuid):
+                #if the current doc is not equal to the inputted doc_uuid,
+                #add the doc to the discarddocs list
                 if doc != self.doc_uuid:
                     discarddocs = doc
+        #create a new graph called gV and assign it's name and shape
         gV = graphviz.Digraph('visitor', node_attr={'shape' : 'rectangle'})
+        #create a new graph called gD and assign it's name and shape
         gD = graphviz.Digraph('document', node_attr={'shape' : 'circle'})
-        gD.graph_attr.update(rank='max', shape= 'circle' )
+        #add the rank attributes to each graph
+        gD.graph_attr.update(rank='max')
         gV.graph_attr.update(rank='min')
+        #for every doc in the docs list
         for doc in docs:
+            #if the current doc equals the inputted document
             if (doc == self.doc_uuid):
+                #add a circular node and colour it green
                 gD.node(doc, str((doc)[-4:]), fillcolor='green', style='filled', shape='circle')
             else:
+                #if the current doc is in the discarddocs list and the docs list, do nothing
                 if doc in discarddocs and doc in docs:
                     continue
+                #otherwise
                 else:
+                    #add a circular node and colour it white
                     gD.node(doc, str((doc[-4:])), fillcolor='white', style='filled', shape='circle')
+        #for every visitor in the visitors list
         for visitor in visitors:
+            #if the list returned by return_docs_by_userid is not empty
             if(task5.return_docs_by_userid(visitor) != None):
+                #if the current visitor equals the inputted visitor_uuid
                 if(visitor == self.visitor_uuid):
+                    #add a rectangle node and colour it green
                     gV.node(visitor, str(visitor[-4:]), fillcolor='green', style='filled', shape='rectangle')
                     try:
+                            #add an edge between the current visitor and the inputted document
                             gV.edge(visitor, self.doc_uuid)
                     except Exception:
                         pass # do something here for the exception
                 else:
+                    #add a rectangle node for the current visitor and colour it white
                     gV.node(visitor, str(visitor[-4:]), fillcolor='white', style='filled', shape='rectangle')
+                    #for every doc in the list returned by return_docs_by_userid for the current visitor
                     for  doc in task5.return_docs_by_userid(visitor):
                         try:
+                            #if the current doc is not equal to the inputted doc
                             if (doc != self.doc_uuid):
+                                #add a circular node and colour it white
                                 gD.node(doc, str((doc)[-4:]), fillcolor='white', style='filled', shape='circle')
+                            #add an edge between the current visitor and the current doc
                             gV.edge(visitor, doc)
                         except Exception:
                             pass # do something here for the exception
+        #connect the two graphs
         gV.subgraph(gD)
-       
+        #set the outputted graph's format to a png
         gV.format = 'png'
+        #render the graphs
         gV.render(directory='doctest-output', view=True)
 
   

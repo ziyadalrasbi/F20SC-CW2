@@ -2,18 +2,18 @@ digraph visitor {
 	graph [rank=min]
 	node [shape=rectangle]
 	"4108dc09bfe11a0c" [label="1a0c" fillcolor=white shape=rectangle style=filled]
-	"4108dc09bfe11a0c" -> "101122221951-00000000a695c340822e61891c8f14cf"
 	"4108dc09bfe11a0c" -> "100806172045-0000000081705fbea3553bd0d745b92f"
+	"4108dc09bfe11a0c" -> "101122221951-00000000a695c340822e61891c8f14cf"
 	"4108dc09bfe11a0c" -> "100405170355-00000000ee4bfd24d2ff703b9147dd59"
 	"4108dc09bfe11a0c" -> "100806162735-00000000115598650cb8b514246272b5"
 	"00000000deadbeef" [label=beef fillcolor=green shape=rectangle style=filled]
 	"00000000deadbeef" -> "100806162735-00000000115598650cb8b514246272b5"
 	subgraph document {
-		graph [rank=max shape=circle]
+		graph [rank=max]
 		node [shape=circle]
 		"100806162735-00000000115598650cb8b514246272b5" [label="72b5" fillcolor=green shape=circle style=filled]
-		"101122221951-00000000a695c340822e61891c8f14cf" [label="14cf" fillcolor=white shape=circle style=filled]
 		"100806172045-0000000081705fbea3553bd0d745b92f" [label=b92f fillcolor=white shape=circle style=filled]
+		"101122221951-00000000a695c340822e61891c8f14cf" [label="14cf" fillcolor=white shape=circle style=filled]
 		"100405170355-00000000ee4bfd24d2ff703b9147dd59" [label=dd59 fillcolor=white shape=circle style=filled]
 	}
 }
