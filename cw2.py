@@ -604,47 +604,73 @@ class Gui:
         print("File has been changed to: " + jfile)
     
     def task2a(self, doc_uuid):
-        if(doc_uuid == ""):
-            messagebox.showerror(title="Error", message="Please enter a document ID")
+        global data
+        if (data == []):
+            messagebox.showerror(title="Error", message="Please choose a data file")
         else:
-            task2 = Task2(doc_uuid, True)
-            task2.display_views_by_country()
+            if(doc_uuid == ""):
+                messagebox.showerror(title="Error", message="Please enter a document ID")
+            else:
+                task2 = Task2(doc_uuid, True)
+                task2.display_views_by_country()
+    
     
     def task2b(self, doc_uuid):
-        if(doc_uuid == ""):
-            messagebox.showerror(title="Error", message="Please enter a document ID")
+        if (data == []):
+            messagebox.showerror(title="Error", message="Please choose a data file")
         else:
-            task2 = Task2(doc_uuid, True)
-            task2.display_views_by_continent()
+            if(doc_uuid == ""):
+                messagebox.showerror(title="Error", message="Please enter a document ID")
+            else:
+                task2 = Task2(doc_uuid, True)
+                task2.display_views_by_continent()
     
     def task3a(self):
-        task3 = Task3()
-        task3.display_views_by_browser_part_a()
+        if (data == []):
+            messagebox.showerror(title="Error", message="Please choose a data file")
+        else:
+            task3 = Task3()
+            task3.display_views_by_browser_part_a()
 
     def task3b1(self):
-        task3 = Task3()
-        task3.display_views_by_browser_short_a()
+        if (data == []):
+            messagebox.showerror(title="Error", message="Please choose a data file")
+        else:
+            task3 = Task3()
+            task3.display_views_by_browser_short_a()
     
     def task3b2(self):
-        task3 = Task3()
-        task3.display_views_by_browser_short_b()
+        if (data == []):
+            messagebox.showerror(title="Error", message="Please choose a data file")
+        else:
+            task3 = Task3()
+            task3.display_views_by_browser_short_b()
 
     def task4(self):
-        Task4.display_viewtime_by_userid()
+        if (data == []):
+            messagebox.showerror(title="Error", message="Please choose a data file")
+        else:
+            Task4.display_viewtime_by_userid()
     
     def task5and6(self, doc_uuid, visitor_uuid=None):
-        if(doc_uuid == ""):
-            messagebox.showerror(title="Error", message="Please enter a document ID")
+        if (data == []):
+            messagebox.showerror(title="Error", message="Please choose a data file")
         else:
-            task6 = Task6(doc_uuid, visitor_uuid)
-            task6.alsolikesgraph()
+            if(doc_uuid == ""):
+                messagebox.showerror(title="Error", message="Please enter a document ID")
+            else:
+                task6 = Task6(doc_uuid, visitor_uuid)
+                task6.alsolikesgraph()
 
     def task5and6helper(self, doc_uuid, visitor_uuid):
         visEmpty = None
-        if (visitor_uuid == ""):
-            self.task5and6(doc_uuid, visEmpty)
+        if (data == []):
+            messagebox.showerror(title="Error", message="Please choose a data file")
         else:
-            self.task5and6(doc_uuid, visitor_uuid)
+            if (visitor_uuid == ""):
+                self.task5and6(doc_uuid, visEmpty)
+            else:
+                self.task5and6(doc_uuid, visitor_uuid)
 
 #Task 8
 class Task8:
