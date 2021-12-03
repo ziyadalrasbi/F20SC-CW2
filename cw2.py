@@ -533,9 +533,9 @@ class Task6:
                         gD.node(doc, str((doc[-4:])), fillcolor='white', style='filled', shape='circle')
             except:
                 print("There was a problem completing this request, please ensure the document/visitor ID are correct.")
-        #for every visitor in the visitors list
-        for visitor in visitors:
-            try:
+        try:
+            #for every visitor in the visitors list
+            for visitor in visitors:
                 #if the list returned by return_docs_by_userid is not empty
                 if(task5.return_docs_by_userid(visitor) != None):
                     #if the current visitor equals the inputted visitor_uuid
@@ -579,9 +579,9 @@ class Task6:
                             messagebox.showerror(title="Error", message=str(e)) # do something here for the exception
                         except:
                             print("Invalid document/visitor ID provided, please re-enter.")
-            except:
-                messagebox.showwarning(title="Error", message="Invalid document/visitor ID provided, please re-enter.")
-                raise
+        except:
+            messagebox.showwarning(title="Error", message="Invalid document/visitor ID provided, please re-enter.")
+            raise
         #connect the two graphs
         gV.subgraph(gD)
         #set the outputted graph's format to a png
