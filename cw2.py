@@ -11,7 +11,8 @@ from tkinter import *                           #import tkinter to allow the imp
 from tkinter.filedialog import askopenfilename  #import askopenfilename to allow the gui to change the dataset file
 import argparse                                 #import argparse to create a command line interface
 from tkinter import messagebox                  #import messagebox to show errors to the user
-
+import errno
+import os
 
 # the only global variable used within this class is data
 # this is a list that holds the JSON information in a readable format
@@ -25,6 +26,7 @@ class DataImport:
         self.data_list = data_list
 
     def open_json(self, fname):
+        
         #access the global list "data"
         global data
         #set data to empty
@@ -33,8 +35,10 @@ class DataImport:
         dataDict = []
         #set self.data_list to empty
         self.data_list = []
-        #set "dataset" to the inputted data file
+        
+            #set "dataset" to the inputted data file
         dataset = open(fname, 'r', encoding='utf-8')
+    
         #Set a variable called Lines to every line in the file
         Lines = dataset.readlines()
         #for every line in the json file
@@ -45,9 +49,15 @@ class DataImport:
                 #add the json objects to the list "data"
                 self.data_list.append(dataDict)
             #error handling
-            except JSONDecodeError as e:
-                print("Error decoding JSON file, please ensure format is correct.")
+            except JSONDecodeError:
+                if len(sys.argv) == 1:
+                    messagebox.showerror(title="Error", message="Error decoding JSON file, please ensure format is correct.")
+                    raise
+                else:
+                    print("Error decoding JSON file, please ensure format is correct.")
+                    raise
         dataset.close()
+        
         return self.data_list
 
 # Task 2
@@ -79,15 +89,21 @@ class Task2:
             except Exception as e:
                 messagebox.showerror(title="Error", message=str(e))
         #if this function was called upon by the press of a button, plot the graph of countries and display it
-        if (self.isPressed == True):
-            #add title
-            plt.title("Display Views by Country")
-            #add grid lines
-            plt.grid(axis='y', alpha=0.75)
-            plt.xlabel('country')
-            plt.ylabel('amount')
-            plt.hist(self.countries)
-            plt.show()
+        if len(self.countries) == 0:
+            if len(sys.argv) == 1:
+                messagebox.showerror(title="Error", message="No countries found for this document ID. Please ensure you provided a valid document ID.")
+            else:
+                print("No countries found for this document ID. Please ensure you provided a valid document ID.")
+        else:
+            if (self.isPressed == True):
+                #add title
+                plt.title("Display Views by Country")
+                #add grid lines
+                plt.grid(axis='y', alpha=0.75)
+                plt.xlabel('country')
+                plt.ylabel('amount')
+                plt.hist(self.countries)
+                plt.show()
         
     #-------------------------------------TASK 2B-------------------------------------
     def display_views_by_continent(self):
@@ -121,15 +137,18 @@ class Task2:
                     continents.append("Antartica")
             except Exception as e:
                 messagebox.showerror(title="Error", message=str(e))
-        #add title
-        plt.title("Display Views by Continent")
-        #add grid lines
-        plt.grid(axis='y', alpha=0.75)
-        #plot the continents graph and display it
-        plt.xlabel('continents')
-        plt.ylabel('amount')
-        plt.hist(continents)
-        plt.show()
+            except:
+                print("error")
+        if len(self.countries) != 0:
+            #add title
+            plt.title("Display Views by Continent")
+            #add grid lines
+            plt.grid(axis='y', alpha=0.75)
+            #plot the continents graph and display it
+            plt.xlabel('continents')
+            plt.ylabel('amount')
+            plt.hist(continents)
+            plt.show()
         
 #Task 3
 class Task3:
@@ -225,6 +244,8 @@ class Task3:
                         self.browsers.append("Other")
             except Exception as e:
                 messagebox.showerror(title="Error", message=str(e))
+            except:
+                print("error")
         #using the "Counter" function, count each time a browser has been added to the list and assign that browser an integer value
         counter = Counter(self.browsers)
         #add title
@@ -277,6 +298,8 @@ class Task3:
                     
             except Exception as e:
                 messagebox.showerror(title="Error", message=str(e))
+            except:
+                print("error")
         # displaying the info
         counter = Counter(self.browsers)
         #add title
@@ -316,6 +339,8 @@ class Task4:
                 viewtime[viewer['visitor_uuid']] += total_readtime
             except Exception:
                 pass
+            except:
+                print("error")
         #create a list of the top ten viewers sorted by viewtime
         time_sorted = list(sorted(viewtime.items(), key=lambda kv: kv[1], reverse=True))[:10]
         #create two empty lists, users and times
@@ -362,6 +387,8 @@ class Task5:
                     viewerIDList.add(viewerID)
             except Exception as e:
                 messagebox.showerror(title="Error", message=str(e))
+            except:
+                print("error")
         #if the length of the list is 1, return nothing
         #if the length exceeds 1, return viewerIDList
         if(len(viewerIDList) < 2):
@@ -385,6 +412,8 @@ class Task5:
                     docs_list.add(temp_doc)
             except Exception as e:
                 messagebox.showerror(title="Error", message=str(e))
+            except:
+                print("error")
         #if the length of the list is 1, return nothing
         #if the length exceeds 1, return docs_list
         if(len(docs_list) < 2):
@@ -400,13 +429,16 @@ class Task5:
         #if there is no inputted visitor id
         if self.visitor_uuid is None:
             #set the value of the also_likes_visitor list to the list returned by return_visitors_by_docid
-            also_likes_visitor = self.return_visitors_by_docid(temp)
-            #for every visitor in the also_likes_visitor list
-            for visitor in also_likes_visitor:
-                #if the list returned by return_docs_by_userid(currentvisitor) is not empty
-                if(self.return_docs_by_userid(visitor) != None):
-                    #extend the list by the list returned
-                    also_likes_docs.extend(self.return_docs_by_userid(visitor))
+            try:
+                also_likes_visitor = self.return_visitors_by_docid(temp)
+                #for every visitor in the also_likes_visitor list
+                for visitor in also_likes_visitor:
+                    #if the list returned by return_docs_by_userid(currentvisitor) is not empty
+                    if(self.return_docs_by_userid(visitor) != None):
+                        #extend the list by the list returned
+                        also_likes_docs.extend(self.return_docs_by_userid(visitor))
+            except:
+                raise
         #if there is an inputted visitor id
         else:
             #extend the also_likes_docs by the list returned by return_docs_by_userid(visitor)
@@ -420,16 +452,21 @@ class Task5:
     #-------------------------------------TASK 5D-------------------------------------
     def also_likes_top_10 (self, temp, temp2=None):
         #assign a list called top10docs the value of the list returned by the also_likes function
-        top10docs = self.also_likes(temp, temp2)
+        top10docs = []
+        try:
+            top10docs = self.also_likes(temp, temp2)
+        except:
+            print("Invalid document/visitor ID provided, please re-enter with a valid ID.")
         #create a Counter called counter of the top10docs list (counts the amount of times that a document has been entered into the list and assigns that key a value)
         counter = Counter(top10docs)
         #create a new list that counts the top 10 most occuring documents and the inputted document
         top10docsarranged = counter.most_common(11)
         #print a key into the console
-        print("also likes (document ID : Number of reads):")
-        #for every document in the top10docsarranged list, print the document id and the amount of times it has occured
-        for doc in top10docsarranged:
-            print(str(doc[0]) + " : " + str(doc[1]))
+        if len(top10docs) > 0:
+            print("also likes (document ID : Number of reads):")
+            #for every document in the top10docsarranged list, print the document id and the amount of times it has occured
+            for doc in top10docsarranged:
+                print(str(doc[0]) + " : " + str(doc[1]))
         #return the top10documentsarranged list
         return top10docsarranged
 
@@ -472,59 +509,70 @@ class Task6:
         gV.graph_attr.update(rank='min')
         #for every doc in the docs list
         for doc in docs:
-            #if the current doc equals the inputted document
-            if (doc == self.doc_uuid):
-                #add a circular node and colour it green
-                gD.node(doc, str((doc)[-4:]), fillcolor='green', style='filled', shape='circle')
-            else:
-                #if the current doc is in the discarddocs list and the docs list, do nothing
-                if doc in discarddocs and doc in docs:
-                    continue
-                #otherwise
+            try:
+                #if the current doc equals the inputted document
+                if (doc == self.doc_uuid):
+                    #add a circular node and colour it green
+                    gD.node(doc, str((doc)[-4:]), fillcolor='green', style='filled', shape='circle')
                 else:
-                    #add a circular node and colour it white
-                    gD.node(doc, str((doc[-4:])), fillcolor='white', style='filled', shape='circle')
+                    #if the current doc is in the discarddocs list and the docs list, do nothing
+                    if doc in discarddocs and doc in docs:
+                        continue
+                    #otherwise
+                    else:
+                        #add a circular node and colour it white
+                        gD.node(doc, str((doc[-4:])), fillcolor='white', style='filled', shape='circle')
+            except:
+                print("error")
         #for every visitor in the visitors list
-        for visitor in visitors:
-            #if the list returned by return_docs_by_userid is not empty
-            if(task5.return_docs_by_userid(visitor) != None):
-                #if the current visitor equals the inputted visitor_uuid
-                if(visitor == self.visitor_uuid):
-                    #add a rectangle node and colour it green
-                    gV.node(visitor, str(visitor[-4:]), fillcolor='green', style='filled', shape='rectangle')
-                    try:
-                            #add an edge between the current visitor and the inputted document
-                            gV.edge(visitor, self.doc_uuid)
-                    except Exception as e:
-                        messagebox.showerror(title="Error", message=str(e)) # do something here for the exception
-                else:
-                    #add a rectangle node for the current visitor and colour it white
-                    gV.node(visitor, str(visitor[-4:]), fillcolor='white', style='filled', shape='rectangle')
-                    
-                    try:
-                        #if the user has inputted a visitor_uuid
-                        if self.visitor_uuid != None:
-                            #for every doc in the list returned by return_docs_by_userid for the current visitor
-                            for doc in task5.return_docs_by_userid(visitor):                          
-                                #if the current doc is not equal to the inputted doc
-                                if (doc != self.doc_uuid):
-                                    #add a circular node and colour it white
-                                    gD.node(doc, str((doc)[-4:]), fillcolor='white', style='filled', shape='circle')
-                                #add an edge between the current visitor and the current doc
-                                gV.edge(visitor, doc)
-                        else:
-                            #for every document in the top10 docs list
-                            for doc in docs:
-                                #if the document ID is not the same as the inputted document ID
-                                if (doc != self.doc_uuid):
-                                    #add a circular node and colour it white
-                                    gD.node(doc, str((doc)[-4:]), fillcolor='white', style='filled', shape='circle')
-                                #if the current doc is in the list returned by return_docs_by_userid for the current visitor
-                                if doc in task5.return_docs_by_userid(visitor):
+        try:
+            for visitor in visitors:
+                #if the list returned by return_docs_by_userid is not empty
+                if(task5.return_docs_by_userid(visitor) != None):
+                    #if the current visitor equals the inputted visitor_uuid
+                    if(visitor == self.visitor_uuid):
+                        #add a rectangle node and colour it green
+                        gV.node(visitor, str(visitor[-4:]), fillcolor='green', style='filled', shape='rectangle')
+                        try:
+                                #add an edge between the current visitor and the inputted document
+                                gV.edge(visitor, self.doc_uuid)
+                        except Exception as e:
+                            messagebox.showerror(title="Error", message=str(e)) # do something here for the exception
+                        except:
+                            print("error")
+                    else:
+                        #add a rectangle node for the current visitor and colour it white
+                        gV.node(visitor, str(visitor[-4:]), fillcolor='white', style='filled', shape='rectangle')
+                        
+                        try:
+                            #if the user has inputted a visitor_uuid
+                            if self.visitor_uuid != None:
+                                #for every doc in the list returned by return_docs_by_userid for the current visitor
+                                for doc in task5.return_docs_by_userid(visitor):                          
+                                    #if the current doc is not equal to the inputted doc
+                                    if (doc != self.doc_uuid):
+                                        #add a circular node and colour it white
+                                        gD.node(doc, str((doc)[-4:]), fillcolor='white', style='filled', shape='circle')
                                     #add an edge between the current visitor and the current doc
                                     gV.edge(visitor, doc)
-                    except Exception as e:
-                        messagebox.showerror(title="Error", message=str(e)) # do something here for the exception
+                            else:
+                                #for every document in the top10 docs list
+                                for doc in docs:
+                                    #if the document ID is not the same as the inputted document ID
+                                    if (doc != self.doc_uuid):
+                                        #add a circular node and colour it white
+                                        gD.node(doc, str((doc)[-4:]), fillcolor='white', style='filled', shape='circle')
+                                    #if the current doc is in the list returned by return_docs_by_userid for the current visitor
+                                    if doc in task5.return_docs_by_userid(visitor):
+                                        #add an edge between the current visitor and the current doc
+                                        gV.edge(visitor, doc)
+                        except Exception as e:
+                            messagebox.showerror(title="Error", message=str(e)) # do something here for the exception
+                        except:
+                            print("error")
+        except:
+            messagebox.showwarning(title="Error", message="Invalid document/visitor ID provided, please re-enter.")
+            raise
         #connect the two graphs
         gV.subgraph(gD)
         #set the outputted graph's format to a png

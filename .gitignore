@@ -8,3 +8,7 @@ test.json
 tests.json
 testss.json
 test600.json
+dist/
+build/
+__pycache__/
+cw2.spec
