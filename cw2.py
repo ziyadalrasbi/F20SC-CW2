@@ -13,12 +13,14 @@ import argparse                                 #import argparse to create a com
 from tkinter import messagebox                  #import messagebox to show errors to the user
 
 
-
+# the only global variable used within this class is data
+# this is a list that holds the JSON information in a readable format
+# accessed globally by required methods like the GUI/CMD classes
 data = []
 
 #Import the data file
 class DataImport:
-    #initialise the parameters used for the task2 objects
+    #initialise the parameters used for the dataimport objects
     def __init__(self, data_list=[]):
         self.data_list = data_list
 
@@ -338,7 +340,7 @@ class Task4:
 
 # Task 5
 class Task5:
-    #initialise the parameters used for the task4 objects
+    #initialise the parameters used for the task5 objects
     def __init__(self, doc_uuid, visitor_uuid=None):
         self.doc_uuid = doc_uuid
         self.visitor_uuid = visitor_uuid
@@ -433,7 +435,7 @@ class Task5:
 
 #Task 6
 class Task6:
-    #initialise the parameters used for the task4 objects
+    #initialise the parameters used for the task6 objects
     def __init__(self, doc_uuid, visitor_uuid=None):
         self.doc_uuid = doc_uuid
         self.visitor_uuid = visitor_uuid
@@ -532,7 +534,7 @@ class Task6:
 
 #Task 7
 class Gui:
-    #initialise the parameters used for the task4 objects
+    #initialise the parameters used for the task7 objects
     def __init__(self):
         return
     
@@ -647,6 +649,7 @@ class Gui:
 #Task 8
 class Task8:
 
+     #initialise the parameters used for the task8 objects
     def __init__(self, doc_uuid=None, visitor_uuid=None, file_name=None):
         self.doc_uuid = doc_uuid
         self.visitor_uuid = visitor_uuid
@@ -664,6 +667,7 @@ class Task8:
 
     def cmd_checking(self):
         # initial checking for errors in the command line interface
+        # making sure arguments are provided correctly and only consist of the allowed features
         global data
         import_data = DataImport() 
         if self.cmd_args.uid:
@@ -682,6 +686,7 @@ class Task8:
         self.cmd_execute(self.cmd_args.t)
         
     def cmd_execute(self, id):
+        # this is where the commands are executed within the command line
         task2 = Task2(self.doc_uuid, True)
         task3 = Task3()
         task5 = Task5(self.doc_uuid, self.visitor_uuid)
@@ -714,13 +719,16 @@ class Task8:
         if id == 'af1':
             taskA.find_users_with_key(self.visitor_uuid)
 
-
+# Additional features
 class AdditionalFeatures:
 
+     #initialise the parameters used for the additionalfeatures objects
     def __init__(self, doc_uuid=None, visitor_uuid=None):
         self.doc_uuid = doc_uuid
         self.visitor_uuid = visitor_uuid
     
+    # a method to find any users within a specified JSON file that have the input within their user_uuid
+    # for example, someone can search for '45ba' and the file will be searched to see any users with this code in their uuid
     def find_users_with_key(self, visitor_uuid):
         visitor_ids = list(set([visitor['visitor_uuid'] for visitor in data]))
         found_visitors = []
