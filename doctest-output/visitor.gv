@@ -4,8 +4,8 @@ digraph visitor {
 	"00000000deadbeef" [label=beef fillcolor=green shape=rectangle style=filled]
 	"00000000deadbeef" -> "aaaaaaaaaaaa-00000000df1ad06a86c40000000feadbe"
 	"5cc95d811cd9f4ef" [label=f4ef fillcolor=white shape=rectangle style=filled]
-	"5cc95d811cd9f4ef" -> "aaaaaaaaaaaa-00000000df1ad06a86c40000000feadbe"
 	"5cc95d811cd9f4ef" -> "bbbbbbbbbbbb-00000000df1ad06a86c4000000beecbe"
+	"5cc95d811cd9f4ef" -> "aaaaaaaaaaaa-00000000df1ad06a86c40000000feadbe"
 	subgraph document {
 		graph [rank=max]
 		node [shape=circle]

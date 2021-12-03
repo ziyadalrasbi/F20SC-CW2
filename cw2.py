@@ -12,6 +12,7 @@ import re                                       #import re to allow the use of r
 from tkinter import *                           #import tkinter to allow the implementation of a graphical user interface for task 7
 from tkinter.filedialog import askopenfilename
 import argparse                                 #import argparse to create a command line interface
+from tkinter import messagebox
 
 
 data = []
@@ -68,10 +69,14 @@ class Task2:
                     viewer_country = viewer['visitor_country']
                     #add the viewer's country to the countries list
                     self.countries.append(viewer_country)
-            except Exception:
-                pass # do something here for the exception
+            except Exception as e:
+                messagebox.showerror(title="Error", message=str(e))
         #if this function was called upon by the press of a button, plot the graph of countries and display it
         if (self.isPressed == True):
+            #add title
+            plt.title("Display Views by Country")
+            #add grid lines
+            plt.grid(axis='y', alpha=0.75)
             plt.xlabel('country')
             plt.ylabel('amount')
             plt.hist(self.countries)
@@ -107,8 +112,12 @@ class Task2:
                     continents.append("Europe")
                 if (temp_continent == "AN"):
                     continents.append("Antartica")
-            except Exception:
-                pass # another exception
+            except Exception as e:
+                messagebox.showerror(title="Error", message=str(e))
+        #add title
+        plt.title("Display Views by Continent")
+        #add grid lines
+        plt.grid(axis='y', alpha=0.75)
         #plot the continents graph and display it
         plt.xlabel('continents')
         plt.ylabel('amount')
@@ -157,12 +166,15 @@ class Task3:
                     else:
                         self.browsers.append("Other")
                     
-            except Exception:
-                pass # do something here for the exception
+            except Exception as e:
+                messagebox.showerror(title="Error", message=str(e))
         # displaying the info
         counter = Counter(self.browsers)
-        #plot the browsers and show the graph
+        #add title
+        plt.title("Display Browser Usage")
+        #add grid lines
         plt.grid(axis='y', alpha=0.75)
+        #plot the browsers and show the graph
         plt.xlabel('Browser')
         plt.ylabel('Amount')
         plt.bar(counter.keys(), counter.values())
@@ -204,10 +216,14 @@ class Task3:
                         self.browsers.append("Firefox")
                     else:
                         self.browsers.append("Other")
-            except Exception:
-                pass # do something here for the exception
+            except Exception as e:
+                messagebox.showerror(title="Error", message=str(e))
         #using the "Counter" function, count each time a browser has been added to the list and assign that browser an integer value
         counter = Counter(self.browsers)
+        #add title
+        plt.title("Display Browser Usage")
+        #add grid lines
+        plt.grid(axis='y', alpha=0.75)
         #plot the x and y axis
         plt.xlabel('browser')
         plt.ylabel('amount')
@@ -252,12 +268,15 @@ class Task3:
                     else:
                         self.browsers.append("Other")
                     
-            except Exception:
-                pass # do something here for the exception
+            except Exception as e:
+                messagebox.showerror(title="Error", message=str(e))
         # displaying the info
         counter = Counter(self.browsers)
-        #plot the browsers and show the graph
+        #add title
+        plt.title("Display Browser Usage")
+        #add grid lines
         plt.grid(axis='y', alpha=0.75)
+        #plot the browsers and show the graph
         plt.xlabel('Browser')
         plt.ylabel('Amount')
         plt.bar(counter.keys(), counter.values())
@@ -281,6 +300,7 @@ class Task4:
         # O(N) time complexity solution found
         # faster than O(N^2)
         #for every viewer in the dataset
+        
         for viewer in data:
             try:
                 #assign the current viewer's "event_readtime" to total_time
@@ -299,8 +319,11 @@ class Task4:
             #add the current viewer to the users and times list respectively
             users.append(viewer[0])
             times.append(viewer[1])
-        #plot the data and show the graph
+        #add title
+        plt.title("Display Most Avid Users")
+        #add grid lines
         plt.grid(axis='y', alpha=0.75)
+        #plot the data and show the graph
         plt.xlabel('viewer ID')
         plt.ylabel('time spent')
         plt.bar(users, times)
@@ -330,8 +353,8 @@ class Task5:
                 if (viewer['subject_doc_id'] == temp):
                     viewerID = viewer['visitor_uuid']
                     viewerIDList.add(viewerID)
-            except Exception:
-                pass # do something here for the exception
+            except Exception as e:
+                messagebox.showerror(title="Error", message=str(e))
         #if the length of the list is 1, return nothing
         #if the length exceeds 1, return viewerIDList
         if(len(viewerIDList) < 2):
@@ -353,8 +376,8 @@ class Task5:
                 if (docs['visitor_uuid'] == temp):
                     temp_doc = docs['subject_doc_id']
                     docs_list.add(temp_doc)
-            except Exception:
-                pass
+            except Exception as e:
+                messagebox.showerror(title="Error", message=str(e))
         #if the length of the list is 1, return nothing
         #if the length exceeds 1, return docs_list
         if(len(docs_list) < 2):
@@ -410,7 +433,7 @@ class Task6:
         self.visitor_uuid = visitor_uuid
     #-------------------------------------TASK 6-------------------------------------
     def alsolikesgraph (self):
-        #create an object called task 5 for the Task5 class and pass the
+        #create an object called task 5 for the Task5 class and messagebox.showerror(title="Error", message=str(e)) the
         #doc_uuid and visitor_uuid of this class
         task5 = Task5(self.doc_uuid, self.visitor_uuid)
         #create a new list and assign it the returned list of return_visitors_by_docid
@@ -459,22 +482,23 @@ class Task6:
                     try:
                             #add an edge between the current visitor and the inputted document
                             gV.edge(visitor, self.doc_uuid)
-                    except Exception:
-                        pass # do something here for the exception
+                    except Exception as e:
+                        messagebox.showerror(title="Error", message=str(e)) # do something here for the exception
                 else:
                     #add a rectangle node for the current visitor and colour it white
                     gV.node(visitor, str(visitor[-4:]), fillcolor='white', style='filled', shape='rectangle')
                     #for every doc in the list returned by return_docs_by_userid for the current visitor
-                    for  doc in task5.return_docs_by_userid(visitor):
-                        try:
+                    try:
+                        for  doc in task5.return_docs_by_userid(visitor):
+                        
                             #if the current doc is not equal to the inputted doc
                             if (doc != self.doc_uuid):
                                 #add a circular node and colour it white
                                 gD.node(doc, str((doc)[-4:]), fillcolor='white', style='filled', shape='circle')
                             #add an edge between the current visitor and the current doc
                             gV.edge(visitor, doc)
-                        except Exception:
-                            pass # do something here for the exception
+                    except Exception as e:
+                        messagebox.showerror(title="Error", message=str(e)) # do something here for the exception
         #connect the two graphs
         gV.subgraph(gD)
         #set the outputted graph's format to a png
@@ -486,6 +510,8 @@ class Task6:
 
 class Gui:
 
+    
+    
     def __init__(self):
         return
 
@@ -495,7 +521,7 @@ class Gui:
         window.title("Data Document Tracker")
         window.geometry('900x500')
         window.configure(bg='white')
-
+        
         doc_uuid_label = Label(window, text="Document UUID:")
         doc_uuid_label.place(x = 3, y = 40)
         doc_uuid_label.configure(bg='white')
@@ -544,12 +570,18 @@ class Gui:
         print("File has been changed to: " + jfile)
     
     def task2a(self, doc_uuid):
-        task2 = Task2(doc_uuid, True)
-        task2.display_views_by_country()
+        if(doc_uuid == ""):
+            messagebox.showerror(title="Error", message="Please enter a document ID")
+        else:
+            task2 = Task2(doc_uuid, True)
+            task2.display_views_by_country()
     
     def task2b(self, doc_uuid):
-        task2 = Task2(doc_uuid, True)
-        task2.display_views_by_continent()
+        if(doc_uuid == ""):
+            messagebox.showerror(title="Error", message="Please enter a document ID")
+        else:
+            task2 = Task2(doc_uuid, True)
+            task2.display_views_by_continent()
     
     def task3a(self):
         task3 = Task3()
@@ -567,8 +599,11 @@ class Gui:
         Task4.display_viewtime_by_userid()
     
     def task5and6(self, doc_uuid, visitor_uuid=None):
-        task6 = Task6(doc_uuid, visitor_uuid)
-        task6.alsolikesgraph()
+        if(doc_uuid == ""):
+            messagebox.showerror(title="Error", message="Please enter a document ID")
+        else:
+            task6 = Task6(doc_uuid, visitor_uuid)
+            task6.alsolikesgraph()
 
     def task5and6helper(self, doc_uuid, visitor_uuid):
         visEmpty = None
