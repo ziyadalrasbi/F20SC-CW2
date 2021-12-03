@@ -547,7 +547,7 @@ class Gui:
         window = Tk()
         #configure the window settings
         window.title("Data Document Tracker")
-        window.geometry('900x500')
+        window.geometry('500x400')
         window.configure(bg='white')
         
         #configure label settings
@@ -559,11 +559,11 @@ class Gui:
         vis_uuid_label.configure(bg='white')
 
         #configure Entries
-        doc_uuid_entry = Entry(window,width=130)
+        doc_uuid_entry = Entry(window,width=65)
         doc_uuid_entry.place(x = 95, y = 40)
         if doc_uuid is not None:
             doc_uuid_entry.insert(0, doc_uuid)
-        vis_uuid_entry = Entry(window,width=130)
+        vis_uuid_entry = Entry(window,width=65)
         vis_uuid_entry.place(x = 95, y = 70)
         if visitor_uuid is not None:
             vis_uuid_entry.insert(0, visitor_uuid)
@@ -582,13 +582,13 @@ class Gui:
         btn5 = Button(window, text="5/6. Display Also Likes Graph", bg='white', width = 30, command=lambda: self.task5and6helper(doc_uuid_entry.get(), vis_uuid_entry.get()))
 
         #Place task buttons
-        btn2a.place(x = 660, y = 110)
-        btn2b.place(x = 660, y = 140)
-        btn3a.place(x = 660, y = 170)
-        btn3b1.place(x = 660, y = 200)
-        btn3b2.place(x = 660, y = 230)
-        btn4.place(x = 660, y = 260)
-        btn5.place(x = 660, y = 290)
+        btn2a.place(x = 260, y = 110)
+        btn2b.place(x = 260, y = 140)
+        btn3a.place(x = 260, y = 170)
+        btn3b1.place(x = 260, y = 200)
+        btn3b2.place(x = 260, y = 230)
+        btn4.place(x = 260, y = 260)
+        btn5.place(x = 260, y = 290)
 
         #block execution of anymore code after this line
         window.mainloop()
