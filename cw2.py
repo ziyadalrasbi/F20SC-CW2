@@ -489,7 +489,7 @@ class Gui:
     def __init__(self):
         return
 
-    def make_gui(self):   
+    def make_gui(self, doc_uuid=None, visitor_uuid=None):   
         visitorEmpty = None
         window = Tk()
         window.title("Data Document Tracker")
@@ -505,8 +505,12 @@ class Gui:
 
         doc_uuid_entry = Entry(window,width=130)
         doc_uuid_entry.place(x = 95, y = 40)
+        if doc_uuid is not None:
+            doc_uuid_entry.insert(0, doc_uuid)
         vis_uuid_entry = Entry(window,width=130)
         vis_uuid_entry.place(x = 95, y = 70)
+        if visitor_uuid is not None:
+            vis_uuid_entry.insert(0, visitor_uuid)
 
         btnFile = Button(window, text="Select input data file", bg='white', width = 40, command=lambda: self.changefile())
         btnFile.place(x = 3, y = 10)
@@ -587,22 +591,25 @@ class Task8:
         self.cmd_parser.add_argument('-d', type=str, help='The document ID to analyse.')
         self.cmd_parser.add_argument('-t', type=str, help='The specified task to anaylse.')
         self.cmd_parser.add_argument('-f', type=str, help='The path to the JSON file.')
+        self.cmd_parser.add_argument('-af1', type=str, help="Additional feature: find users in a file with a specified substring.")
         self.cmd_args = self.cmd_parser.parse_args()
 
     def cmd_checking(self):
+        # initial checking for errors in the command line interface
         global data
         import_data = DataImport() 
         if self.cmd_args.uid:
             self.visitor_uuid = self.cmd_args.uid
         if self.cmd_args.t is None:
             print("No task ID provided, please re-enter.")
-        if self.cmd_args.t not in ['2a', '2b', '3a', '3b', '4', '5d', '6', '7']:
-            print("Invalid task ID provided, please re-enter (options: 2a, 2b, 3a, 3b, 4, 5d, 6, 7).")
+        if self.cmd_args.t not in ['2a', '2b', '3a', '3b', '4', '5d', '6', '7', 'af1']:
+            print("Invalid task ID provided, please re-enter (options: 2a, 2b, 3a, 3b, 4, 5d, 6, 7, af1).")
         if self.cmd_args.d is None:
             print("No document ID provided, please re-enter.")
         if self.cmd_args.f is None:
             print("No JSON file path provided, please re-enter.")
         self.doc_uuid = self.cmd_args.d
+        self.file_name = self.cmd_args.f
         data = import_data.open_json(self.cmd_args.f)
         self.cmd_execute(self.cmd_args.t)
         
@@ -612,7 +619,8 @@ class Task8:
         task5 = Task5(self.doc_uuid, self.visitor_uuid)
         task6 = Task6(self.doc_uuid, self.visitor_uuid)
         task7 = Gui()
-    
+        taskA = AdditionalFeatures()
+        # running the different tasks based on the -t flag
         if id == '2a':
             task2.display_views_by_country()
         if id == '2b':
@@ -628,35 +636,46 @@ class Task8:
         if id == '6':
             task6.alsolikesgraph()
         if id == '7':
-            task7.make_gui()
-
-            
-
-#task8 = Task8()
-#task8.cmd_checking()
-
-
-
-# testing the functions here
-#display_views_by_continent("140310170010-0000000067dc80801f1df696ae52862b")
-#display_views_by_continent()
-#display_views_by_browser_part_a()
-
-#display_viewtime_by_userid("130927071110-0847713a13bea63d7f359ea012f3538d")
+            # if task 7 is provided, a feature was added to open the GUI with the document ID, file path, and visitor ID provided in the command
+            # when the GUI is open, these values are defaulted to their text boxes
+            global data
+            import_data = DataImport()
+            data = []
+            data = import_data.open_json(self.file_name)
+            task7.make_gui(self.doc_uuid, self.visitor_uuid)
+        if id == 'af1':
+            taskA.find_users_with_key(self.visitor_uuid)
 
 
-#return_docs_by_userid("50ac35b7a0474b3e")
+class AdditionalFeatures:
+
+    def __init__(self, doc_uuid=None, visitor_uuid=None):
+        self.doc_uuid = doc_uuid
+        self.visitor_uuid = visitor_uuid
+    
+    def find_users_with_key(self, visitor_uuid):
+        visitor_ids = list(set([visitor['visitor_uuid'] for visitor in data]))
+        found_visitors = []
+        if len(visitor_uuid) < 4:
+            print("Too small: please search for more than 4 characters at a time.")
+        else:
+            for visitor in visitor_ids:
+                if visitor_uuid in visitor:
+                    found_visitors.append(visitor)
+
+        if len(found_visitors) == 0:
+            print('No users were found containing this ID in this file.')
+        else:
+            print('Users found:')
+            for i in found_visitors:   
+                print(i)
 
 
-# task2 = Task2('6140310170010-0000000067dc80801f1df696ae5282b', True)
-# task2.display_views_by_country()
-# task2.display_views_by_continent()
-
-# task3 = Task3()
-# task3.display_views_by_browser_short_b()
-
+# final checking for command line
+# if more than one argument is specified, then begin the command line interface
+# otherwise, open up the GUI
 if len(sys.argv) == 1:
-    gui = Gui() 
+    gui = Gui()
     gui.make_gui()
     sys.exit()
 else:
