@@ -493,13 +493,22 @@ class Task6:
         #create an empty list called discarddocs
         discarddocs = []
         #if there is  an inputted user id
-        if(self.visitor_uuid != None):
+        try:
+            if(self.visitor_uuid != None):
             #for every doc in return_docs_by_userid
-            for doc in task5.return_docs_by_userid(self.visitor_uuid):
-                #if the current doc is not equal to the inputted doc_uuid,
-                #add the doc to the discarddocs list
-                if doc != self.doc_uuid:
-                    discarddocs = doc
+                for doc in task5.return_docs_by_userid(self.visitor_uuid):
+                
+                    #if the current doc is not equal to the inputted doc_uuid,
+                    #add the doc to the discarddocs list
+                    if doc != self.doc_uuid:
+                        discarddocs = doc
+        except:
+            if len(sys.argv) == 1:
+                messagebox.showerror(title="Error", message="Error completing this request, please ensure the inputted document/visitor ID are correct.")
+                raise
+            else:
+                print("Error completing this request, please ensure the inputted document/visitor ID are correct.")
+                raise
         #create a new graph called gV and assign it's name and shape
         gV = graphviz.Digraph('visitor', node_attr={'shape' : 'rectangle'})
         #create a new graph called gD and assign it's name and shape
@@ -523,10 +532,10 @@ class Task6:
                         #add a circular node and colour it white
                         gD.node(doc, str((doc[-4:])), fillcolor='white', style='filled', shape='circle')
             except:
-                print("error")
+                print("There was a problem completing this request, please ensure the document/visitor ID are correct.")
         #for every visitor in the visitors list
-        try:
-            for visitor in visitors:
+        for visitor in visitors:
+            try:
                 #if the list returned by return_docs_by_userid is not empty
                 if(task5.return_docs_by_userid(visitor) != None):
                     #if the current visitor equals the inputted visitor_uuid
@@ -539,7 +548,7 @@ class Task6:
                         except Exception as e:
                             messagebox.showerror(title="Error", message=str(e)) # do something here for the exception
                         except:
-                            print("error")
+                            print("Invalid document/visitor ID provided, please re-enter.")
                     else:
                         #add a rectangle node for the current visitor and colour it white
                         gV.node(visitor, str(visitor[-4:]), fillcolor='white', style='filled', shape='rectangle')
@@ -569,10 +578,10 @@ class Task6:
                         except Exception as e:
                             messagebox.showerror(title="Error", message=str(e)) # do something here for the exception
                         except:
-                            print("error")
-        except:
-            messagebox.showwarning(title="Error", message="Invalid document/visitor ID provided, please re-enter.")
-            raise
+                            print("Invalid document/visitor ID provided, please re-enter.")
+            except:
+                messagebox.showwarning(title="Error", message="Invalid document/visitor ID provided, please re-enter.")
+                raise
         #connect the two graphs
         gV.subgraph(gD)
         #set the outputted graph's format to a png
