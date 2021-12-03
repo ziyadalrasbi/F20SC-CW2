@@ -1,8 +1,6 @@
-import sys
-import json
-import sys
-from json.decoder import JSONDecodeError
-from os import system                                     #import the json library to allow for the use of the dataset
+import json                                     #import the json library to allow for the use of the dataset
+import sys                                      #import the sys library to allow for command line usage
+from json.decoder import JSONDecodeError        #import the JSONDecodeError to allow for handling exceptions         
 import matplotlib.pyplot as plt                 #import matplotlib library to plot the graphs for tasks 2, 3 and 4
 import pycountry_convert as pc                  #import the pycountry_convert library to gain access to a library of country and continent codes for task 3
 from collections import Counter                 #import the Counter library to allow for creating a top 10 list for viewer read time and also likes
@@ -10,25 +8,32 @@ import graphviz                                 #import graphviz to plot the gra
 import httpagentparser                          #import the httpagentparser library to gain access to a library of browsers by agentparser strings for task 3
 import re                                       #import re to allow the use of regular expressions in task 3
 from tkinter import *                           #import tkinter to allow the implementation of a graphical user interface for task 7
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilename  #import askopenfilename to allow the gui to change the dataset file
 import argparse                                 #import argparse to create a command line interface
-from tkinter import messagebox
-import time
+from tkinter import messagebox                  #import messagebox to show errors to the user
+
 
 
 data = []
 
+#Import the data file
 class DataImport:
-
+    #initialise the parameters used for the task2 objects
     def __init__(self, data_list=[]):
         self.data_list = data_list
 
     def open_json(self, fname):
+        #access the global list "data"
         global data
+        #set data to empty
         data = []
+        #create an empty list called dataDict
         dataDict = []
+        #set self.data_list to empty
         self.data_list = []
+        #set "dataset" to the inputted data file
         dataset = open(fname, 'r', encoding='utf-8')
+        #Set a variable called Lines to every line in the file
         Lines = dataset.readlines()
         #for every line in the json file
         for line in Lines:
@@ -37,12 +42,11 @@ class DataImport:
                 dataDict = json.loads(line)
                 #add the json objects to the list "data"
                 self.data_list.append(dataDict)
+            #error handling
             except JSONDecodeError as e:
                 print("Error decoding JSON file, please ensure format is correct.")
         dataset.close()
         return self.data_list
-
-#create a global list called data
 
 # Task 2
 class Task2:
@@ -406,7 +410,6 @@ class Task5:
             #extend the also_likes_docs by the list returned by return_docs_by_userid(visitor)
             also_likes_docs.extend(self.return_docs_by_userid(temp2))
         #sort the documents
-
         sort = sorted(also_likes_docs, key=lambda kv: kv[1], reverse=True)
         sort = list(sort)
         #return the also_likes_docs list
@@ -441,13 +444,13 @@ class Task6:
         task5 = Task5(self.doc_uuid, self.visitor_uuid)
         #create a new list and assign it the returned list of return_visitors_by_docid
         visitors = task5.return_visitors_by_docid(self.doc_uuid)
-        #create a new list and assign it the returned list of also_likes
+        #create an empty list called docs
         docs = []
+        #create a set called top10 and fill it with the contents returned by also_likes_top_10
         top10 = task5.also_likes_top_10(self.doc_uuid, self.visitor_uuid)
-        print(top10)
+        #for every d in top10, add the document ID to the docs list
         for d in top10:
             docs.append(d[0])
-        print(docs)
         #create an empty list called discarddocs
         discarddocs = []
         #if there is  an inputted user id
@@ -495,9 +498,11 @@ class Task6:
                 else:
                     #add a rectangle node for the current visitor and colour it white
                     gV.node(visitor, str(visitor[-4:]), fillcolor='white', style='filled', shape='rectangle')
-                    #for every doc in the list returned by return_docs_by_userid for the current visitor
+                    
                     try:
+                        #if the user has inputted a visitor_uuid
                         if self.visitor_uuid != None:
+                            #for every doc in the list returned by return_docs_by_userid for the current visitor
                             for doc in task5.return_docs_by_userid(visitor):                          
                                 #if the current doc is not equal to the inputted doc
                                 if (doc != self.doc_uuid):
@@ -506,12 +511,15 @@ class Task6:
                                 #add an edge between the current visitor and the current doc
                                 gV.edge(visitor, doc)
                         else:
+                            #for every document in the top10 docs list
                             for doc in docs:
+                                #if the document ID is not the same as the inputted document ID
                                 if (doc != self.doc_uuid):
                                     #add a circular node and colour it white
                                     gD.node(doc, str((doc)[-4:]), fillcolor='white', style='filled', shape='circle')
-                                #add an edge between the current visitor and the current doc
+                                #if the current doc is in the list returned by return_docs_by_userid for the current visitor
                                 if doc in task5.return_docs_by_userid(visitor):
+                                    #add an edge between the current visitor and the current doc
                                     gV.edge(visitor, doc)
                     except Exception as e:
                         messagebox.showerror(title="Error", message=str(e)) # do something here for the exception
@@ -522,22 +530,25 @@ class Task6:
         #render the graphs
         gV.render(directory='doctest-output', view=True)
 
-  
-
+#Task 7
 class Gui:
-
-    
-    
+    #initialise the parameters used for the task4 objects
     def __init__(self):
         return
-
-    def make_gui(self, doc_uuid=None, visitor_uuid=None):   
+    
+    #-------------------------------------TASK 7-------------------------------------
+    def make_gui(self, doc_uuid=None, visitor_uuid=None):
+        #set a variable called visitorEmpty to None
         visitorEmpty = None
+        
+        #set window to Tk()
         window = Tk()
+        #configure the window settings
         window.title("Data Document Tracker")
         window.geometry('900x500')
         window.configure(bg='white')
         
+        #configure label settings
         doc_uuid_label = Label(window, text="Document UUID:")
         doc_uuid_label.place(x = 3, y = 40)
         doc_uuid_label.configure(bg='white')
@@ -545,6 +556,7 @@ class Gui:
         vis_uuid_label.place(x = 25, y = 70)
         vis_uuid_label.configure(bg='white')
 
+        #configure Entries
         doc_uuid_entry = Entry(window,width=130)
         doc_uuid_entry.place(x = 95, y = 40)
         if doc_uuid is not None:
@@ -554,9 +566,11 @@ class Gui:
         if visitor_uuid is not None:
             vis_uuid_entry.insert(0, visitor_uuid)
 
+        #configure the change file button
         btnFile = Button(window, text="Select input data file", bg='white', width = 40, command=lambda: self.changefile())
         btnFile.place(x = 3, y = 10)
-        
+
+        #Configure task buttons
         btn2a = Button(window, text="2a. Views by Country", bg='white', width = 30, command=lambda: self.task2a(doc_uuid_entry.get()))
         btn2b = Button(window, text="2b. Views by Continent", bg='white', width = 30, command=lambda: self.task2b(doc_uuid_entry.get()))
         btn3a = Button(window, text="3a. Views by Browser", bg='white', width = 30, command=self.task3a)
@@ -565,6 +579,7 @@ class Gui:
         btn4 = Button(window, text="4. View Time by User", bg='white', width = 30, command=self.task4)
         btn5 = Button(window, text="5/6. Display Also Likes Graph", bg='white', width = 30, command=lambda: self.task5and6helper(doc_uuid_entry.get(), vis_uuid_entry.get()))
 
+        #Place task buttons
         btn2a.place(x = 660, y = 110)
         btn2b.place(x = 660, y = 140)
         btn3a.place(x = 660, y = 170)
@@ -573,9 +588,10 @@ class Gui:
         btn4.place(x = 660, y = 260)
         btn5.place(x = 660, y = 290)
 
-
+        #block execution of anymore code after this line
         window.mainloop()
 
+    #definitions of each task to be called by buttons
     def changefile(self):
         Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
         jfile = askopenfilename() # show an "Open" dialog box and return the path to the selected file
@@ -627,7 +643,8 @@ class Gui:
             self.task5and6(doc_uuid, visEmpty)
         else:
             self.task5and6(doc_uuid, visitor_uuid)
-    
+
+#Task 8
 class Task8:
 
     def __init__(self, doc_uuid=None, visitor_uuid=None, file_name=None):
