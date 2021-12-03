@@ -13,6 +13,7 @@ from tkinter import *                           #import tkinter to allow the imp
 from tkinter.filedialog import askopenfilename
 import argparse                                 #import argparse to create a command line interface
 from tkinter import messagebox
+import time
 
 
 data = []
@@ -405,9 +406,11 @@ class Task5:
             #extend the also_likes_docs by the list returned by return_docs_by_userid(visitor)
             also_likes_docs.extend(self.return_docs_by_userid(temp2))
         #sort the documents
-        also_likes_docs.sort()
+
+        sort = sorted(also_likes_docs, key=lambda kv: kv[1], reverse=True)
+        sort = list(sort)
         #return the also_likes_docs list
-        return also_likes_docs
+        return sort
 
     #-------------------------------------TASK 5D-------------------------------------
     def also_likes_top_10 (self, temp, temp2=None):
@@ -439,7 +442,12 @@ class Task6:
         #create a new list and assign it the returned list of return_visitors_by_docid
         visitors = task5.return_visitors_by_docid(self.doc_uuid)
         #create a new list and assign it the returned list of also_likes
-        docs = task5.also_likes(self.doc_uuid, self.visitor_uuid)
+        docs = []
+        top10 = task5.also_likes_top_10(self.doc_uuid, self.visitor_uuid)
+        print(top10)
+        for d in top10:
+            docs.append(d[0])
+        print(docs)
         #create an empty list called discarddocs
         discarddocs = []
         #if there is  an inputted user id
@@ -489,14 +497,22 @@ class Task6:
                     gV.node(visitor, str(visitor[-4:]), fillcolor='white', style='filled', shape='rectangle')
                     #for every doc in the list returned by return_docs_by_userid for the current visitor
                     try:
-                        for  doc in task5.return_docs_by_userid(visitor):
-                        
-                            #if the current doc is not equal to the inputted doc
-                            if (doc != self.doc_uuid):
-                                #add a circular node and colour it white
-                                gD.node(doc, str((doc)[-4:]), fillcolor='white', style='filled', shape='circle')
-                            #add an edge between the current visitor and the current doc
-                            gV.edge(visitor, doc)
+                        if self.visitor_uuid != None:
+                            for doc in task5.return_docs_by_userid(visitor):                          
+                                #if the current doc is not equal to the inputted doc
+                                if (doc != self.doc_uuid):
+                                    #add a circular node and colour it white
+                                    gD.node(doc, str((doc)[-4:]), fillcolor='white', style='filled', shape='circle')
+                                #add an edge between the current visitor and the current doc
+                                gV.edge(visitor, doc)
+                        else:
+                            for doc in docs:
+                                if (doc != self.doc_uuid):
+                                    #add a circular node and colour it white
+                                    gD.node(doc, str((doc)[-4:]), fillcolor='white', style='filled', shape='circle')
+                                #add an edge between the current visitor and the current doc
+                                if doc in task5.return_docs_by_userid(visitor):
+                                    gV.edge(visitor, doc)
                     except Exception as e:
                         messagebox.showerror(title="Error", message=str(e)) # do something here for the exception
         #connect the two graphs
