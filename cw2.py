@@ -6,16 +6,11 @@ from tkinter import messagebox                  #import messagebox to show error
 import dataimport
 import tasks
 
-# the only global variable used within this class is data
-# this is a list that holds the JSON information in a readable format
-# accessed globally by required methods like the GUI/CMD classes
-data = []
-
 #Task 7
 class Gui:
     #initialise the parameters used for the task7 objects
     def __init__(self):
-        return
+        self.data = []
     
     #-------------------------------------TASK 7-------------------------------------
     def make_gui(self, doc_uuid=None, visitor_uuid=None):
@@ -82,76 +77,74 @@ class Gui:
     def changefile(self):
         Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
         jfile = askopenfilename() # show an "Open" dialog box and return the path to the selected file
-        global data
         import_data = dataimport.DataImport(jfile)
-        data = []
-        data = import_data.open_json()
+        self.data = []
+        self.data = import_data.open_json()
         print("File has been changed to: " + jfile)
         
     
     def task2a(self, doc_uuid):
-        global data
-        if (data == []):
+        if (self.data == []):
             messagebox.showerror(title="Error", message="Please choose a data file")
         else:
             if(doc_uuid == ""):
                 messagebox.showerror(title="Error", message="Please enter a document ID")
             else:
-                task2 = tasks.Task2(doc_uuid, True, data)
+                task2 = tasks.Task2(doc_uuid, True, self.data)
                 task2.display_views_by_country()
     
     
     def task2b(self, doc_uuid):
-        if (data == []):
+        if (self.data == []):
             messagebox.showerror(title="Error", message="Please choose a data file")
         else:
             if(doc_uuid == ""):
                 messagebox.showerror(title="Error", message="Please enter a document ID")
             else:
-                task2 = tasks.Task2(doc_uuid, True, data)
+                task2 = tasks.Task2(doc_uuid, True, self.data)
                 task2.display_views_by_continent()
     
     def task3a(self):
-        if (data == []):
+        if (self.data == []):
             messagebox.showerror(title="Error", message="Please choose a data file")
         else:
-            task3 = tasks.Task3(data)
+            task3 = tasks.Task3(self.data)
             task3.display_views_by_browser_part_a()
 
     def task3b1(self):
-        if (data == []):
+        if (self.data == []):
             messagebox.showerror(title="Error", message="Please choose a data file")
         else:
-            task3 = tasks.Task3(data)
+            task3 = tasks.Task3(self.data)
             task3.display_views_by_browser_short_a()
     
     def task3b2(self):
-        if (data == []):
+        if (self.data == []):
             messagebox.showerror(title="Error", message="Please choose a data file")
         else:
-            task3 = tasks.Task3(data)
+            task3 = tasks.Task3(self.data)
             task3.display_views_by_browser_short_b()
 
     def task4(self):
-        if (data == []):
+        if (self.data == []):
             messagebox.showerror(title="Error", message="Please choose a data file")
         else:
-            task4 = tasks.Task4(data)
+            task4 = tasks.Task4(self.data)
             task4.display_viewtime_by_userid()
     
     def task5and6(self, doc_uuid, visitor_uuid=None):
-        if (data == []):
+        if (self.data == []):
             messagebox.showerror(title="Error", message="Please choose a data file")
         else:
             if(doc_uuid == ""):
                 messagebox.showerror(title="Error", message="Please enter a document ID")
             else:
-                task6 = tasks.Task6(doc_uuid, data, visitor_uuid)
+                task6 = tasks.Task6(doc_uuid, self.data, visitor_uuid)
                 task6.alsolikesgraph()
 
     def task5and6helper(self, doc_uuid, visitor_uuid):
         visEmpty = None
-        if (data == []):
+        if (self.data == []):
             messagebox.showerror(title="Error", message="Please choose a data file")
         else:
             if (visitor_uuid == ""):
@@ -160,24 +153,24 @@ class Gui:
                 self.task5and6(doc_uuid, visitor_uuid)
     
     def af2(self):
-        if (data == []):
+        if (self.data == []):
             messagebox.showerror(title="Error", message="Please choose a data file")
         else:
-            af2 = tasks.AdditionalFeatures(data)
+            af2 = tasks.AdditionalFeatures(self.data)
             af2.most_popular_visitor_source()
     
     def af3(self):
-        if (data == []):
+        if (self.data == []):
             messagebox.showerror(title="Error", message="Please choose a data file")
         else:
-            af3 = tasks.AdditionalFeatures(data)
+            af3 = tasks.AdditionalFeatures(self.data)
             af3.most_popular_visitor_device()
     
     def af5(self):
-        if (data == []):
+        if (self.data == []):
             messagebox.showerror(title="Error", message="Please choose a data file")
         else:
-            af5 = tasks.AdditionalFeatures(data)
+            af5 = tasks.AdditionalFeatures(self.data)
             af5.most_popular_referrers()
 
 
@@ -252,10 +245,9 @@ class Task8:
         if id == '7':
             # if task 7 is provided, a feature was added to open the GUI with the document ID, file path, and visitor ID provided in the command
             # when the GUI is open, these values are defaulted to their text boxes
-            global data
             import_data = dataimport.DataImport(self.file_name)
-            data = []
-            data = import_data.open_json()
+            self.data = []
+            self.data = import_data.open_json()
             task7.make_gui(self.doc_uuid, self.visitor_uuid)
         if id == 'af1':
             taskA.find_users_with_key(self.visitor_uuid)
