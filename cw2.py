@@ -14,9 +14,6 @@ class Gui:
     
     #-------------------------------------TASK 7-------------------------------------
     def make_gui(self, doc_uuid=None, visitor_uuid=None):
-        #set a variable called visitorEmpty to None
-        visitorEmpty = None
-        
         #set window to Tk()
         window = Tk()
         #configure the window settings
