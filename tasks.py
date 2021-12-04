@@ -544,8 +544,8 @@ class Task6:
             raise
         #connect the two graphs
         gV.subgraph(gD)
-        #set the outputted graph's format to a png
-        gV.format = 'png'
+        #set the outputted graph's format to a pdf
+        gV.format = 'pdf'
         #render the graphs
         gV.render(directory='doctest-output', view=True)
 
